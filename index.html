@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vanderbilt Non-Clinical Healthcare Explorer</title>
+<style>
+/* ============================================================
+   Tokens - light is the default; dark redefines tokens only.
+   ============================================================ */
+:root {
+  --paper: #faf7f0;
+  --paper-raised: #ffffff;
+  --paper-sunken: #f1ecdf;
+  --ink: #181610;
+  --ink-soft: #4f4a3c;
+  --ink-faint: #857d68;
+  --line: #ddd5c2;
+  --line-strong: #c3b895;
+  --accent: #8f6b1d;
+  --accent-ink: #6e5115;
+  --accent-wash: #f3ead3;
+  --good: #3d6b34;
+  --good-wash: #e8efe2;
+  --track: #8f6b1d;        /* per-track hue, set inline per page */
+  --track-wash: #f3ead3;
+  --shadow: 0 1px 2px rgba(24,22,16,.06), 0 6px 18px -8px rgba(24,22,16,.14);
+  --radius: 10px;
+  --serif: "Charter", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: "Seravek", "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "SF Mono", "Cascadia Code", Consolas, "Liberation Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #16140e;
+    --paper-raised: #1e1b13;
+    --paper-sunken: #100e09;
+    --ink: #ece5d3;
+    --ink-soft: #b5ac93;
+    --ink-faint: #7d7560;
+    --line: #35301f;
+    --line-strong: #4d4529;
+    --accent: #d3a94f;
+    --accent-ink: #e2be6c;
+    --accent-wash: #2a2412;
+    --good: #8db97f;
+    --good-wash: #1d2617;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -10px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="light"] {
+  --paper: #faf7f0; --paper-raised: #ffffff; --paper-sunken: #f1ecdf;
+  --ink: #181610; --ink-soft: #4f4a3c; --ink-faint: #857d68;
+  --line: #ddd5c2; --line-strong: #c3b895;
+  --accent: #8f6b1d; --accent-ink: #6e5115; --accent-wash: #f3ead3;
+  --good: #3d6b34; --good-wash: #e8efe2;
+  --shadow: 0 1px 2px rgba(24,22,16,.06), 0 6px 18px -8px rgba(24,22,16,.14);
+}
+:root[data-theme="dark"] {
+  --paper: #16140e; --paper-raised: #1e1b13; --paper-sunken: #100e09;
+  --ink: #ece5d3; --ink-soft: #b5ac93; --ink-faint: #7d7560;
+  --line: #35301f; --line-strong: #4d4529;
+  --accent: #d3a94f; --accent-ink: #e2be6c; --accent-wash: #2a2412;
+  --good: #8db97f; --good-wash: #1d2617;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -10px rgba(0,0,0,.55);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent-ink); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+/* ---------- chrome ---------- */
+.masthead {
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  position: sticky; top: 0; z-index: 40;
+}
+.masthead-inner {
+  max-width: 1060px; margin: 0 auto; padding: 12px 24px;
+  display: flex; align-items: baseline; gap: 14px;
+}
+.wordmark {
+  font-family: var(--serif); font-size: 1.05rem; font-weight: 700;
+  color: var(--ink); text-decoration: none; letter-spacing: .01em;
+  white-space: nowrap;
+}
+.wordmark .amp { color: var(--accent); }
+.masthead-sub {
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .14em;
+  color: var(--ink-faint);
+}
+.masthead-spacer { flex: 1; }
+.theme-btn {
+  border: 1px solid var(--line); background: var(--paper-raised); color: var(--ink-soft);
+  border-radius: 999px; font: inherit; font-size: .78rem; padding: 3px 12px; cursor: pointer;
+  align-self: center;
+}
+.theme-btn:hover { border-color: var(--line-strong); }
+
+.shell { max-width: 1060px; margin: 0 auto; padding: 0 24px 96px; }
+
+/* ---------- home: hero ---------- */
+.hero { padding: 64px 0 40px; border-bottom: 1px solid var(--line); }
+.hero-eyebrow {
+  font-size: .74rem; text-transform: uppercase; letter-spacing: .16em;
+  color: var(--accent-ink); margin: 0 0 14px;
+}
+.hero h1 {
+  font-family: var(--serif); font-weight: 700;
+  font-size: clamp(1.9rem, 4.4vw, 3rem); line-height: 1.12;
+  margin: 0 0 18px; max-width: 21ch; text-wrap: balance;
+}
+.hero p.lede { font-size: 1.06rem; color: var(--ink-soft); max-width: 62ch; margin: 0 0 8px; }
+.hero p.fineprint { font-size: .84rem; color: var(--ink-faint); max-width: 62ch; margin: 10px 0 0; }
+
+/* ---------- quiz ---------- */
+.quiz-card {
+  margin: 40px 0 8px; border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--paper-raised); box-shadow: var(--shadow); overflow: hidden;
+}
+.quiz-head { padding: 20px 26px 0; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.quiz-head h2 { font-family: var(--serif); font-size: 1.3rem; margin: 0; }
+.quiz-head .k { font-size: .74rem; text-transform: uppercase; letter-spacing: .14em; color: var(--ink-faint); }
+.quiz-body { padding: 14px 26px 24px; }
+.quiz-q { font-weight: 600; margin: 6px 0 12px; }
+.quiz-progress { font-size: .78rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+.quiz-opts { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.quiz-opt {
+  text-align: left; font: inherit; cursor: pointer; width: 100%;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  border-radius: 8px; padding: 10px 14px; line-height: 1.45;
+}
+.quiz-opt:hover { border-color: var(--accent); background: var(--accent-wash); }
+.quiz-start, .btn {
+  display: inline-block; border: none; cursor: pointer; text-decoration: none;
+  background: var(--accent); color: var(--paper); font: inherit; font-weight: 600;
+  font-size: .92rem; padding: 9px 20px; border-radius: 999px;
+}
+:root[data-theme="dark"] .quiz-start, :root[data-theme="dark"] .btn { color: #16140e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .quiz-start, :root:not([data-theme="light"]) .btn { color: #16140e; } }
+.btn-ghost {
+  background: transparent; color: var(--accent-ink);
+  border: 1px solid var(--line-strong);
+}
+.quiz-result-rank { display: grid; gap: 10px; margin-top: 14px; }
+.quiz-result-row {
+  display: flex; align-items: center; gap: 14px;
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px;
+  background: var(--paper); text-decoration: none; color: var(--ink);
+}
+.quiz-result-row:hover { border-color: var(--track); }
+.quiz-result-row .bar-wrap { flex: 1; height: 6px; background: var(--paper-sunken); border-radius: 3px; overflow: hidden; }
+.quiz-result-row .bar { height: 100%; background: var(--track); border-radius: 3px; }
+.quiz-result-row .pct { font-variant-numeric: tabular-nums; font-size: .82rem; color: var(--ink-faint); width: 3.4em; text-align: right; }
+.quiz-result-row .nm { font-weight: 600; width: 17em; max-width: 45vw; }
+
+/* ---------- home: track grid ---------- */
+.grid-head { display: flex; align-items: baseline; gap: 14px; margin: 48px 0 18px; }
+.grid-head h2 { font-family: var(--serif); font-size: 1.5rem; margin: 0; }
+.grid-head .k { font-size: .78rem; color: var(--ink-faint); }
+.track-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.track-card {
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-raised);
+  padding: 20px 22px 18px; text-decoration: none; color: var(--ink);
+  display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow);
+  position: relative;
+}
+.track-card:hover { border-color: var(--track); }
+.track-card .glyph { color: var(--track); height: 26px; }
+.track-card h3 { font-family: var(--serif); font-size: 1.18rem; margin: 2px 0 0; line-height: 1.25; text-wrap: balance; }
+.track-card .tag { color: var(--ink-soft); font-size: .9rem; flex: 1; }
+.track-card .meta {
+  display: flex; gap: 14px; font-size: .74rem; color: var(--ink-faint);
+  border-top: 1px solid var(--line); padding-top: 10px; margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.track-card .done-pill {
+  position: absolute; top: 16px; right: 16px;
+  font-size: .7rem; letter-spacing: .06em; color: var(--good);
+  background: var(--good-wash); border-radius: 999px; padding: 2px 9px;
+}
+
+/* ---------- track page ---------- */
+.crumb { padding: 22px 0 0; font-size: .84rem; }
+.crumb a { color: var(--ink-faint); text-decoration: none; }
+.crumb a:hover { color: var(--accent-ink); }
+.track-hero { padding: 26px 0 26px; border-bottom: 1px solid var(--line); }
+.track-hero .glyph { color: var(--track); height: 34px; margin-bottom: 10px; }
+.track-hero h1 {
+  font-family: var(--serif); font-size: clamp(1.7rem, 3.6vw, 2.5rem);
+  margin: 0 0 10px; line-height: 1.15; text-wrap: balance;
+}
+.track-hero .tagline { font-size: 1.04rem; color: var(--ink-soft); max-width: 64ch; margin: 0 0 18px; }
+.stat-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat-chip {
+  border: 1px solid var(--line); background: var(--paper-raised); border-radius: 8px;
+  padding: 8px 14px; font-size: .8rem; color: var(--ink-soft);
+}
+.stat-chip b { display: block; color: var(--ink); font-size: .92rem; }
+
+.subnav {
+  position: sticky; top: 49px; z-index: 30; background: var(--paper);
+  border-bottom: 1px solid var(--line); display: flex; gap: 4px; overflow-x: auto;
+}
+.subnav a {
+  text-decoration: none; color: var(--ink-faint); font-size: .84rem; font-weight: 600;
+  padding: 11px 14px 9px; border-bottom: 2px solid transparent; white-space: nowrap;
+}
+.subnav a:hover, .subnav a.on { color: var(--ink); border-bottom-color: var(--track); }
+.subnav .prog { margin-left: auto; align-self: center; font-size: .76rem; color: var(--ink-faint); padding-right: 6px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+section.zone { padding: 40px 0 8px; }
+.zone-title { font-family: var(--serif); font-size: 1.45rem; margin: 0 0 6px; }
+.zone-sub { color: var(--ink-faint); font-size: .88rem; margin: 0 0 22px; }
+
+.prose { max-width: 68ch; }
+.prose p { margin: 0 0 14px; color: var(--ink-soft); }
+.prose p strong, .prose li strong { color: var(--ink); }
+.callout {
+  border-left: 3px solid var(--track); background: var(--paper-raised);
+  border-radius: 0 8px 8px 0; padding: 12px 18px; margin: 20px 0; max-width: 68ch;
+  font-size: .93rem; color: var(--ink-soft);
+}
+.callout b { color: var(--ink); }
+
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 22px; margin: 26px 0; align-items: start; }
+.panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-raised); padding: 18px 20px; }
+.panel h4 { margin: 0 0 10px; font-size: .78rem; text-transform: uppercase; letter-spacing: .13em; color: var(--ink-faint); font-weight: 600; }
+.panel ul { margin: 0; padding-left: 18px; color: var(--ink-soft); font-size: .93rem; }
+.panel li { margin-bottom: 7px; }
+.panel li b { color: var(--ink); font-weight: 600; }
+
+.role-list { display: grid; gap: 0; }
+.role-item { padding: 11px 0; border-bottom: 1px solid var(--line); font-size: .93rem; }
+.role-item:last-child { border-bottom: none; }
+.role-item b { display: block; color: var(--ink); }
+.role-item span { color: var(--ink-soft); }
+
+.day-list { list-style: none; margin: 0; padding: 0; }
+.day-list li { display: flex; gap: 14px; padding: 8px 0; border-bottom: 1px dotted var(--line); font-size: .92rem; }
+.day-list li:last-child { border-bottom: none; }
+.day-list time { font-family: var(--mono); font-size: .8rem; color: var(--track); white-space: nowrap; padding-top: 2px; min-width: 4.6em; }
+.day-list span { color: var(--ink-soft); }
+
+.emp-group { margin-bottom: 14px; }
+.emp-group .lbl { font-size: .74rem; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-faint); margin-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  font-size: .8rem; border: 1px solid var(--line); border-radius: 999px;
+  padding: 3px 11px; color: var(--ink-soft); background: var(--paper-raised);
+}
+.chip.local { border-color: var(--track); color: var(--ink); }
+.chip-note { font-size: .76rem; color: var(--ink-faint); margin-top: 8px; }
+
+/* ---------- project ---------- */
+.project-brief {
+  border: 1px solid var(--line-strong); border-radius: var(--radius);
+  background: var(--paper-raised); box-shadow: var(--shadow);
+  padding: 24px 28px; margin: 0 0 30px;
+}
+.project-brief .k { font-size: .72rem; text-transform: uppercase; letter-spacing: .15em; color: var(--track); font-weight: 600; }
+.project-brief h3 { font-family: var(--serif); font-size: 1.5rem; margin: 6px 0 4px; text-wrap: balance; }
+.project-brief .cast { font-size: .88rem; color: var(--ink-faint); margin-bottom: 14px; }
+.project-brief p { color: var(--ink-soft); max-width: 70ch; margin: 0 0 12px; }
+.fiction-note { font-size: .8rem; color: var(--ink-faint); border-top: 1px dotted var(--line); padding-top: 12px; margin-top: 4px; }
+
+.task { border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-raised); margin-bottom: 14px; overflow: hidden; }
+.task.open { border-color: var(--line-strong); box-shadow: var(--shadow); }
+.task-head {
+  display: flex; align-items: center; gap: 16px; width: 100%; text-align: left;
+  background: none; border: none; font: inherit; color: inherit; cursor: pointer;
+  padding: 16px 20px;
+}
+.task-num {
+  font-family: var(--mono); font-size: .82rem; color: var(--track);
+  border: 1px solid var(--track); border-radius: 999px;
+  width: 30px; height: 30px; display: grid; place-items: center; flex-shrink: 0;
+}
+.task.done .task-num { background: var(--track); color: var(--paper); }
+.task-head h4 { margin: 0; font-size: 1.02rem; flex: 1; }
+.task-head .mins { font-size: .76rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.task-head .caret { color: var(--ink-faint); transition: transform .15s; }
+.task.open .caret { transform: rotate(90deg); }
+.task-body { border-top: 1px solid var(--line); padding: 22px 24px 24px; }
+.task-skills { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; }
+.task-skills .chip { font-size: .72rem; }
+
+.task-sec { margin-bottom: 20px; }
+.task-sec > .lbl {
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .14em;
+  color: var(--ink-faint); font-weight: 600; margin-bottom: 8px;
+}
+.task-sec .prose-t { max-width: 70ch; color: var(--ink-soft); font-size: .95rem; }
+.task-sec .prose-t p { margin: 0 0 10px; }
+.task-sec .prose-t ul, .task-sec .prose-t ol { margin: 0 0 10px; padding-left: 20px; }
+.task-sec .prose-t li { margin-bottom: 6px; }
+.task-sec .prose-t b, .task-sec .prose-t strong { color: var(--ink); }
+
+.data-block { border: 1px solid var(--line); border-radius: 8px; background: var(--paper-sunken); padding: 4px 14px 10px; overflow-x: auto; margin: 10px 0; }
+table.d { border-collapse: collapse; font-family: var(--mono); font-size: .78rem; margin: 10px 0 4px; min-width: 480px; }
+table.d caption { text-align: left; font-family: var(--sans); font-size: .78rem; color: var(--ink-faint); padding: 6px 0; caption-side: top; }
+table.d th { text-align: left; font-weight: 600; color: var(--ink); border-bottom: 1px solid var(--line-strong); padding: 5px 14px 5px 0; white-space: nowrap; }
+table.d td { border-bottom: 1px dotted var(--line); padding: 5px 14px 5px 0; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.d td.num, table.d th.num { text-align: right; }
+pre.code {
+  font-family: var(--mono); font-size: .8rem; line-height: 1.55; color: var(--ink);
+  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: 8px;
+  padding: 14px 16px; overflow-x: auto; margin: 10px 0;
+}
+
+.reveal-btn {
+  border: 1px dashed var(--line-strong); background: var(--accent-wash); color: var(--accent-ink);
+  font: inherit; font-size: .86rem; font-weight: 600; cursor: pointer;
+  border-radius: 8px; padding: 10px 16px; width: 100%; text-align: left;
+}
+.reveal-btn:hover { border-style: solid; }
+.model-answer { border: 1px solid var(--line-strong); border-radius: 8px; background: var(--accent-wash); padding: 16px 20px; margin-top: 10px; }
+.model-answer .lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; color: var(--accent-ink); font-weight: 700; margin-bottom: 10px; }
+.model-answer .prose-t { color: var(--ink-soft); font-size: .93rem; max-width: 70ch; }
+.model-answer .prose-t p { margin: 0 0 10px; }
+.model-answer .prose-t ul, .model-answer .prose-t ol { margin: 0 0 10px; padding-left: 20px; }
+.model-answer .prose-t li { margin-bottom: 6px; }
+.model-answer .prose-t b { color: var(--ink); }
+.model-answer table.d { background: transparent; }
+
+.task-done-row { display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 6px; }
+.task-done-row label { font-size: .9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 9px; }
+.task-done-row input { width: 17px; height: 17px; accent-color: var(--track); cursor: pointer; }
+.completion-banner {
+  border: 1px solid var(--good); background: var(--good-wash); color: var(--ink);
+  border-radius: var(--radius); padding: 16px 22px; margin: 18px 0; font-size: .95rem;
+}
+.completion-banner b { color: var(--good); }
+
+/* ---------- next steps ---------- */
+.next-note { font-size: .85rem; color: var(--ink-faint); max-width: 70ch; margin-top: 18px; border-top: 1px dotted var(--line); padding-top: 14px; }
+
+footer.colophon {
+  border-top: 1px solid var(--line); margin-top: 70px; padding: 22px 0 0;
+  font-size: .8rem; color: var(--ink-faint); max-width: 72ch;
+}
+@media (max-width: 640px) {
+  .shell { padding: 0 16px 72px; }
+  .masthead-sub { display: none; }
+  .quiz-result-row .nm { width: auto; }
+  .task-head { padding: 14px 14px; gap: 10px; }
+  .task-body { padding: 16px 14px 18px; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <a class="wordmark" href="#/">Healthcare, <span class="amp">beyond the clinic</span></a>
+    <span class="masthead-sub">A Vanderbilt career exploration tool</span>
+    <span class="masthead-spacer"></span>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle color theme">Theme</button>
+  </div>
+</header>
+
+<main class="shell" id="app" aria-live="polite"></main>
+
+<script>
+/* Fit quiz - each answer adds weight toward one or more tracks.
+ Track ids: strategy-consulting, finance-investing, operations-administration,
+ data-analytics-technology, research-scientific-affairs, health-policy-population-health */
+window.EXPLORER_QUIZ = [
+ {
+ q: "It's 11pm and you're weirdly energized by an assignment. Which one is it?",
+ opts: [
+ { t: "Cracking open a messy, ambiguous question no one has structured yet", w: { "strategy-consulting": 3, "health-policy-population-health": 1 } },
+ { t: "A spreadsheet where the numbers finally tie out", w: { "finance-investing": 3, "data-analytics-technology": 1 } },
+ { t: "Reorganizing a group project so it actually runs on time", w: { "operations-administration": 3 } },
+ { t: "A dataset with a pattern hiding in it", w: { "data-analytics-technology": 3, "research-scientific-affairs": 1 } }
+ ]
+ },
+ {
+ q: "Which headline would you actually click first?",
+ opts: [
+ { t: "“Why this hospital chain is betting big on outpatient surgery”", w: { "strategy-consulting": 2, "operations-administration": 1, "finance-investing": 1 } },
+ { t: "“Inside the $9B deal reshaping kidney care”", w: { "finance-investing": 3 } },
+ { t: "“New trial data could change how heart failure is treated”", w: { "research-scientific-affairs": 3 } },
+ { t: "“What happens when a state extends postpartum Medicaid coverage”", w: { "health-policy-population-health": 3 } }
+ ]
+ },
+ {
+ q: "Pick the compliment you'd most want on a performance review.",
+ opts: [
+ { t: "“Gives the clearest recommendation in the room”", w: { "strategy-consulting": 3 } },
+ { t: "“Nothing gets past them - flawless detail under pressure”", w: { "finance-investing": 3 } },
+ { t: "“People and processes just work better around them”", w: { "operations-administration": 3 } },
+ { t: "“Translates complexity so anyone can act on it”", w: { "data-analytics-technology": 2, "health-policy-population-health": 1, "research-scientific-affairs": 1 } }
+ ]
+ },
+ {
+ q: "Your ideal relationship with science and medicine:",
+ opts: [
+ { t: "I love the science itself - trials, mechanisms, evidence", w: { "research-scientific-affairs": 3, "data-analytics-technology": 1 } },
+ { t: "I care about health, but I'd rather work the business side", w: { "strategy-consulting": 2, "finance-investing": 2 } },
+ { t: "I want to make the system fairer for whole communities", w: { "health-policy-population-health": 3 } },
+ { t: "I want hospitals and clinics to simply run better for patients", w: { "operations-administration": 3 } }
+ ]
+ },
+ {
+ q: "Which tool would you rather get genuinely good at?",
+ opts: [
+ { t: "A slide deck that convinces a CEO", w: { "strategy-consulting": 3 } },
+ { t: "A financial model with a valuation at the bottom", w: { "finance-investing": 3 } },
+ { t: "SQL and a dashboard everyone checks each morning", w: { "data-analytics-technology": 3 } },
+ { t: "A one-page brief a legislator reads before a vote", w: { "health-policy-population-health": 3 } }
+ ]
+ },
+ {
+ q: "How do you feel about ambiguity?",
+ opts: [
+ { t: "Love it - give me the vague problem and three weeks", w: { "strategy-consulting": 3, "health-policy-population-health": 1 } },
+ { t: "Fine, as long as the numbers are knowable in the end", w: { "finance-investing": 2, "data-analytics-technology": 2 } },
+ { t: "I'd rather improve a concrete thing I can walk through and observe", w: { "operations-administration": 3 } },
+ { t: "I trust the evidence - design the study, run it, read the result", w: { "research-scientific-affairs": 3 } }
+ ]
+ },
+ {
+ q: "Pick a room to spend your Tuesday afternoon in.",
+ opts: [
+ { t: "A client boardroom, presenting findings", w: { "strategy-consulting": 2, "finance-investing": 1 } },
+ { t: "A hospital hallway, watching where patients wait", w: { "operations-administration": 3 } },
+ { t: "A quiet desk with two monitors and a big dataset", w: { "data-analytics-technology": 3 } },
+ { t: "A committee hearing on next year's health budget", w: { "health-policy-population-health": 3 } }
+ ]
+ },
+ {
+ q: "Ten years from now, the win that would feel best:",
+ opts: [
+ { t: "Health systems across the country adopted a strategy I shaped", w: { "strategy-consulting": 3 } },
+ { t: "I backed companies that changed how care gets delivered", w: { "finance-investing": 3 } },
+ { t: "A treatment reached patients faster - and payers actually covered it", w: { "research-scientific-affairs": 3 } },
+ { t: "A measurable drop in preventable harm for a whole population", w: { "health-policy-population-health": 2, "operations-administration": 1, "data-analytics-technology": 1 } }
+ ]
+ }
+];
+
+</script>
+<script>
+/* Track: Healthcare Strategy & Consulting */
+window.EXPLORER_TRACKS = window.EXPLORER_TRACKS || [];
+window.EXPLORER_TRACKS.push({
+ id: "strategy-consulting",
+ name: "Strategy & Consulting",
+ short: "Hospitals, health plans, and drug companies pay outside teams to answer their hardest questions. You're the team.",
+ color: "#a3781f",
+ wash: "#f3ead3",
+ glyph: "compass",
+ entryTitle: "Entry role: Analyst / Associate",
+ tagline: "Consultants get hired when a healthcare organization faces a question too big, too urgent, or too politically loaded to answer internally: Should we build it? Buy it? Fix it? Exit it? Your job is to turn ambiguity into a defensible recommendation in about six weeks.",
+ stats: [
+ { k: "Entry job titles", v: "Business Analyst, Associate Consultant" },
+ { k: "Recruiting starts", v: "Sophomore-junior year (early!)" },
+ { k: "Signature deliverable", v: "A slide deck a CEO acts on" },
+ { k: "Nashville advantage", v: "Huron, Chartis & ECG have offices here" }
+ ],
+ field: {
+ what: [
+ "A hospital system is losing surgical cases to a competitor. A health plan wants to know whether to cover a new digital therapy. A private equity firm needs someone to pressure-test a clinic chain before writing a nine-figure check. In each case, leadership hires a consulting team - typically two to six people - that parachutes in, gathers data, interviews stakeholders, builds analysis, and delivers a recommendation with the evidence to back it.",
+ "As the analyst on that team, you own the engine room: you build the Excel models, dig through claims and market data, draft the slides, and increasingly present your own sections to the client. The partners bring relationships and judgment; you bring speed, rigor, and the first draft of the answer. It is the fastest apprenticeship in business - you'll see more organizations in two years than most executives see in twenty.",
+ "Healthcare is one of consulting's biggest practice areas because the industry is enormous, heavily regulated, and constantly being reshaped by policy and technology. Firms range from generalists with health practices (McKinsey, Bain, BCG, Deloitte) to healthcare pure-plays (Chartis, ECG, Clearview, Health Advances) - the pure-plays often go deeper clinically, the generalists rotate you across industries."
+ ],
+ misconception: "That consulting requires a business major. Firms deliberately hire biology, MHS, economics, and engineering majors - they teach you the frameworks in training. What they can't teach (and screen hard for in case interviews) is structured thinking: can you break a fuzzy question into pieces, do quick math out loud, and communicate a clear answer under pressure?",
+ titles: [
+ { title: "Business Analyst / Associate Consultant", desc: "The undergrad entry role at McKinsey, Bain, BCG, L.E.K., and most boutiques. Research, modeling, slide-building, client interviews." },
+ { title: "Healthcare Analyst (boutique)", desc: "Same work at healthcare specialists like Chartis, ECG, Clearview, Putnam - deeper clinical content, less industry-hopping." },
+ { title: "Research Analyst (Advisory Board)", desc: "Best-practice research for hundreds of hospital members instead of one client at a time. Writing-heavy, great teacher of the industry." },
+ { title: "Decision Analytics Associate (ZS)", desc: "The data-science flavor of consulting - pharma commercial analytics, sales-force sizing, market models." }
+ ],
+ day: [
+ { time: "8:30a", what: "Team check-in: partner reshuffles this week's priorities after last night's client call." },
+ { time: "9:00a", what: "Rebuild the surgical-volume model with the client's actual case data that finally arrived." },
+ { time: "11:00a", what: "Interview an orthopedic surgeon about why cases are leaving - your third of five stakeholder interviews." },
+ { time: "12:30p", what: "Lunch at your desk; skim a Sg2 market forecast for the metro area." },
+ { time: "1:30p", what: "Turn this morning's analysis into six slides; agonize over one chart title until it states the insight." },
+ { time: "4:00p", what: "Case-team problem-solving session: your cannibalization math changes the emerging recommendation." },
+ { time: "6:30p", what: "Send the revised deck to the manager; prep tomorrow's client working session." }
+ ],
+ employers: {
+ nashville: ["Huron (Nashville office)", "The Chartis Group (Nashville)", "ECG Management Consultants (Nashville)", "Jarrard Inc.", "C3 Consulting", "Cumberland Consulting (Cognizant)"],
+ national: ["McKinsey & Company", "Bain & Company", "BCG", "L.E.K. Consulting", "Deloitte LSHC", "Oliver Wyman Health", "EY-Parthenon", "ZS Associates", "Clearview Healthcare Partners", "Health Advances", "Putnam Associates", "Advisory Board (Optum)", "Guidehouse", "Alvarez & Marsal Healthcare", "Trinity Life Sciences"]
+ },
+ thrive: [
+ "You like the <b>question</b> more than any particular subject - this month it's surgery centers, next month it's a pharma launch",
+ "Deadlines sharpen you instead of flattening you",
+ "You'd rather give a clear answer that's 80% certain than a hedge that's 100% safe",
+ "Feedback several times a day sounds like a feature, not a threat",
+ "You want maximum learning per year early in your career and you'll trade some lifestyle for it"
+ ]
+ },
+ project: {
+ title: "Should Riverbend Health build an outpatient surgery center?",
+ role: "Analyst, Harpeth Strategy Group (a healthcare strategy boutique in Nashville)",
+ setting: "6-week engagement, week 2",
+ duration: "≈ 2 hours",
+ premise: [
+ "Your client is <b>Riverbend Health</b>, a three-hospital nonprofit system in Middle Tennessee. Its CEO has watched orthopedic surgeons drift cases to a competitor's new ambulatory surgery center (ASC) - a freestanding outpatient facility where procedures cost payers roughly a third less than in a hospital. The board meets in five weeks and wants a recommendation: <b>build our own ASC, partner with the surgeons on a joint venture, or defend the status quo?</b>",
+ "The partner leading the engagement has given you, the analyst, four classic workstreams. Work them in order - each one is a real task that a first-year analyst would own."
+ ],
+ fictionNote: "Riverbend Health and Harpeth Strategy Group are fictional teaching constructs; the numbers are simplified but directionally realistic. The dynamic - payers pushing surgery out of hospitals and into ASCs - is one of the biggest forces in U.S. healthcare right now, and a scenario very much like this one runs inside real firms like Chartis, ECG, and Huron every month.",
+ tasks: [
+ {
+ title: "Structure the problem before touching any data",
+ minutes: 25,
+ skills: ["MECE thinking", "Issue trees", "Hypothesis-driven work"],
+ brief: "<p>Day one of any engagement, before any analysis, a good consultant asks: <i>what would we need to believe for each answer to be right?</i> The tool for this is an <b>issue tree</b> - breaking the big question into a handful of sub-questions that are <b>MECE</b>: mutually exclusive (no overlaps) and collectively exhaustive (nothing important missing). The tree becomes the project plan: every branch gets an owner, an analysis, and a deadline.</p>",
+ todo: "<ol><li>Write the decision question at the top of a page: <i>“Should Riverbend build, partner, or hold?”</i></li><li>Break it into 3-5 major branches - the big things that must be true or false for the answer to change.</li><li>Under each branch, list 2-3 specific questions you could actually analyze with data or interviews.</li><li>Check yourself: do any branches overlap? Is anything a board member would ask missing?</li></ol>",
+ hint: "Almost every market-entry tree has some version of: Is the market attractive? Can <i>we</i> win in it? Do the economics work for <i>us</i>? What are the risks of acting - and of not acting?",
+ model: "<p>One classic four-branch tree:</p><ol><li><b>Market: is outpatient surgery in our metro worth chasing?</b> - How many cases today, growing how fast? Which procedures are moving to ASCs, and what do payers want?</li><li><b>Position: would we win share or just move our own cases?</b> - Where do our surgeons operate today and what would make them shift? What has the competitor ASC actually taken from us?</li><li><b>Economics: does an ASC create or destroy margin for the system?</b> - Per-case margin in an ASC vs. our hospitals; cannibalization vs. retention vs. new capture; build cost and break-even volume.</li><li><b>Execution & risk: can we pull it off?</b> - Physician joint-venture terms, certificate-of-need regulation, staffing, and the risk of doing nothing while payers steer cases away.</li></ol><p>Notice what makes this MECE: market facts, competitive position, money, and feasibility don't overlap, and together they cover everything the board will ask. Your tree doesn't need these exact words - it needs this <i>discipline</i>.</p>"
+ },
+ {
+ title: "Size the market on the back of an envelope",
+ minutes: 30,
+ skills: ["Market sizing", "Estimation", "Sanity-checking"],
+ brief: "<p>The partner stops by your desk: <i>“Before the data request comes back - roughly how many outpatient orthopedic surgeries happen in the Nashville metro each year? I need a number for tomorrow's steering call.”</i> This is a <b>top-down market sizing</b>, and it's also the single most common case-interview exercise. The skill isn't precision - it's a transparent chain of assumptions someone can challenge line by line.</p>",
+ data: "<p>Use round planning figures (close enough for this exercise):</p><ul><li>Nashville metro population: <b>≈ 2.1 million</b></li><li>National benchmark: roughly <b>10-12 orthopedic surgeries per 1,000 people per year</b> across all settings</li><li>Industry estimate: about <b>60%</b> of orthopedic procedures can now safely be done outpatient</li></ul>",
+ todo: "<ol><li>Chain the assumptions: population × procedure rate × outpatient share.</li><li>State a single number <i>and</i> a plausible range.</li><li>Sanity-check it a second way: if the metro has ~25 orthopedic operating rooms across all facilities, does your number imply a believable cases-per-room-per-day?</li></ol>",
+ model: "<p><b>The math:</b> 2.1M people × 11 per 1,000 ≈ <b>23,000 orthopedic surgeries/year</b> in the metro. At a 60% outpatient-eligible share, that's <b>≈ 14,000 outpatient-eligible cases/year</b>, with a defensible range of 11,000-17,000 depending on the rate you assumed.</p><p><b>The sanity check:</b> 14,000 cases ÷ 25 ORs ÷ 250 operating days ≈ 2.2 cases per room per day - believable for a mixed market (a dedicated ASC room runs 4-6 short cases a day; hospital rooms run fewer, longer ones). The number holds.</p><p><b>What the partner actually cares about:</b> you said the assumptions out loud, gave a range instead of false precision, and checked it from a second direction. That habit is 80% of what interviewers grade in a sizing question.</p>"
+ },
+ {
+ title: "Find the story in the client's data",
+ minutes: 35,
+ skills: ["Data analysis", "Unit economics", "Insight generation"],
+ brief: "<p>The client's finance team sends the case-level data you requested, plus a bombshell buried in a footnote: <b>the state's largest commercial insurer will stop paying hospital rates for most of these procedures within two years</b>, steering members to ASCs instead. The partner wants to know: <i>what does this table actually tell us?</i></p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>Riverbend outpatient surgical volume & unit economics (most recent year)</caption><thead><tr><th>Procedure group</th><th class=\"num\">Annual cases</th><th class=\"num\">Paid in hospital (HOPD)</th><th class=\"num\">Paid in ASC</th><th class=\"num\">ASC cost/case</th></tr></thead><tbody><tr><td>Total joint replacement</td><td class=\"num\">1,200</td><td class=\"num\">$21,000</td><td class=\"num\">$14,500</td><td class=\"num\">$9,800</td></tr><tr><td>Spine (single-level)</td><td class=\"num\">500</td><td class=\"num\">$18,000</td><td class=\"num\">$12,000</td><td class=\"num\">$8,900</td></tr><tr><td>Sports medicine (ACL, scopes)</td><td class=\"num\">2,100</td><td class=\"num\">$9,500</td><td class=\"num\">$6,800</td><td class=\"num\">$4,300</td></tr><tr><td>Hand & other</td><td class=\"num\">1,600</td><td class=\"num\">$6,200</td><td class=\"num\">$4,600</td><td class=\"num\">$3,100</td></tr></tbody></table></div><p>Assume ~45% of these cases are commercially insured, and that the payer policy will effectively move <b>40% of commercial cases out of hospital settings</b> whether or not Riverbend acts.</p>",
+ todo: "<ol><li>Compute the per-case <b>margin an ASC would earn</b> for each procedure group (ASC payment − ASC cost).</li><li>Estimate the annual revenue that the payer policy puts at risk if Riverbend does nothing (cases shifting × hospital payment).</li><li>Write the “so what” in two sentences: what is the strategic insight, stated the way you'd say it to the CEO?</li></ol>",
+ hint: "The trap is comparing ASC margin to hospital margin and concluding the ASC looks worse. The real comparison is ASC margin vs. <b>zero</b> - because the shifting cases won't stay in the hospital either way.",
+ model: "<p><b>1 - ASC margin per case:</b> joints <b>$4,700</b>, spine <b>$3,100</b>, sports med <b>$2,500</b>, hand <b>$1,500</b>. Weighted across volumes, roughly $2,600 per case.</p><p><b>2 - Revenue at risk:</b> ≈ 5,400 total cases × 45% commercial × 40% shifting ≈ <b>970 cases/year</b> leaving hospital settings. Valued at hospital rates (weighted avg ≈ $11,400), that's <b>≈ $11M/year of revenue at risk</b> - and if a competitor's ASC captures it, Riverbend keeps none of it and may lose the surgeons' loyalty too.</p><p><b>3 - The “so what”:</b> <i>“This isn't a build-vs-don't-build decision - the cases are leaving the hospital either way; the payer just decided that for us. The only real question is whether the shifted cases land in our ASC at ~$2,600 of margin each, or in a competitor's at zero.”</i></p><p>That reframing - from <i>should we?</i> to <i>who captures the inevitable shift?</i> - is what an insight looks like in consulting. The numbers exist to earn that sentence.</p>"
+ },
+ {
+ title: "Deliver the recommendation, answer-first",
+ minutes: 30,
+ skills: ["Pyramid principle", "Executive communication", "Slide writing"],
+ brief: "<p>Time to write the summary slide the partner will present to the board. Consulting communication is <b>answer-first</b> (the “pyramid principle”): lead with the recommendation, support it with three reasons, then acknowledge risks with mitigations. Executives read the title and decide whether to trust the rest - so every title must be a full sentence that carries the message on its own.</p>",
+ todo: "<ol><li>Write the slide <b>title as the recommendation itself</b> - a complete sentence, not a topic label like “ASC Analysis.”</li><li>Write <b>three supporting points</b>, each one line, each backed by a number from Tasks 2-3.</li><li>Add a <b>risks & mitigations</b> line and a <b>next steps</b> line.</li><li>Read it aloud. Could a board member act on this slide if the meeting ended after 60 seconds? That's the bar.</li></ol>",
+ model: "<p><b>Title:</b> “Riverbend should break ground on a physician-partnered ASC within 12 months - the case shift is happening with or without us.”</p><p><b>Supporting points:</b></p><ul><li>Payer policy will move ~970 of our commercial cases (≈ $11M revenue) out of hospital settings within two years - inaction forfeits them to competitors.</li><li>The metro's ~14,000 outpatient-eligible orthopedic cases are growing, and our employed surgeons currently perform ~5,400 of them - enough to anchor a 4-OR center on day one.</li><li>At ~$2,600 average margin per case, captured-plus-retained volume supports break-even in year 3 under conservative assumptions.</li></ul><p><b>Risks & mitigations:</b> surgeon defection (mitigate with joint-venture equity); construction and licensure timeline (begin certificate-of-need filing now).</p><p><b>Next steps:</b> board approval to fund site selection and JV term-sheet negotiations this quarter.</p><p><b>Why this works:</b> the title takes a position; every bullet has a number; risk is acknowledged rather than hidden. Compare against your version - the most common gap is a title that describes the topic instead of stating the answer.</p>"
+ }
+ ]
+ },
+ next: {
+ courses: [
+ "<b>MHS 2140: Health Care in the U.S.</b> - the system-knowledge foundation every case interview assumes",
+ "<b>Economics electives</b> (health economics, econometrics) - the analytical signal firms screen for",
+ "<b>PUBH 5520 / 5525</b> (health policy & health economics) for grad-level depth",
+ "Any statistics or data-science course - SQL and Excel fluency show up in first-round screens"
+ ],
+ campus: [
+ "<b>Vanderbilt Undergraduate Consulting Club</b> - case-interview prep is non-negotiable for this track; start 12+ months before recruiting",
+ "<b>180 Degrees Consulting</b> and <b>SCNO</b> - real consulting projects for nonprofits, perfect resume proof",
+ "<b>Vanderbilt Business & Medicine Club / Business Healthcare Association (Owen)</b> - healthcare-specific networking",
+ "Healthcare case competitions (UAB Health Administration, CHIP Clarion, IHI) - listed in the advising wiki"
+ ],
+ experiences: [
+ "Summer internships: <b>McKinsey BA</b>, <b>Bain ACI</b>, <b>BCG Summer Associate</b> - applications open ~June before junior year",
+ "Healthcare boutiques with strong undergrad pipelines: <b>Chartis</b>, <b>Clearview</b>, <b>Health Advances</b>, <b>Putnam</b>, <b>ECG</b>, <b>Huron</b>",
+ "Sophomore/first-gen early programs: Bain Building Entrepreneurial Leaders, McKinsey Discover, BCG Early Insight",
+ "<b>Advisory Board Research Analyst</b> - a writing-heavy alternative entry into healthcare strategy"
+ ],
+ now: [
+ "Do one free Forage consulting simulation (BCG or Accenture) to add to your resume this week",
+ "Read <i>The Pyramid Principle</i> summary + one Sg2 or Advisory Board market forecast",
+ "Book a case-interview practice session with a club member - your first case should be embarrassing in private, not in a screen",
+ "Ask your career advisor for the wiki's interview-prep guides: McKinsey, Bain, BCG, Huron, Chartis, and ECG all have one"
+ ],
+ advisorNote: "Your advisor's wiki has full interview-prep guides for ten consulting employers, 19 curated consulting internship listings with deadlines, and alumni now at several of these firms who take Vanderbilt coffee chats. Consulting recruiting runs absurdly early - if this track clicked, make that advising appointment this semester, not next."
+ }
+});
+
+</script>
+<script>
+/* Track: Healthcare Finance & Investing */
+window.EXPLORER_TRACKS = window.EXPLORER_TRACKS || [];
+window.EXPLORER_TRACKS.push({
+ id: "finance-investing",
+ name: "Finance & Investing",
+ short: "Every hospital merger, biotech IPO, and clinic roll-up has analysts behind it building the models. Healthcare runs on capital - someone has to price it.",
+ color: "#5e7d3f",
+ wash: "#eaf0e2",
+ glyph: "ledger",
+ entryTitle: "Entry role: Analyst",
+ tagline: "Investment banks advise healthcare companies on mergers and raising money; private equity and venture firms buy or back them. Analysts in both build the financial models, run the valuations, and write the memos that decide where billions flow - and healthcare is one of the largest, busiest sectors in all of finance.",
+ stats: [
+ { k: "Entry job titles", v: "IB Analyst, PE/VC Analyst" },
+ { k: "Recruiting starts", v: "Sophomore spring for junior summer" },
+ { k: "Signature deliverable", v: "The model and the memo" },
+ { k: "Nashville advantage", v: "A genuine healthcare-PE hub" }
+ ],
+ field: {
+ what: [
+ "Healthcare never stops transacting: hospital systems merge, private equity firms buy physician practices and roll them into platforms, venture funds back digital-health startups, and drug companies raise billions for pipelines. Every one of those deals needs people to answer two questions with actual rigor: <b>what is this business worth, and what could go wrong?</b>",
+ "On the <b>investment banking</b> side, you advise companies doing deals - building valuation models, drafting pitch books, and managing the blizzard of analysis a live transaction generates. On the <b>investing</b> side (private equity, growth equity, venture), you're the buyer: screening companies, doing due diligence, and writing the investment memo that convinces a committee to commit capital. Both start with the same craft: financial statements, Excel, and disciplined skepticism.",
+ "Healthcare finance rewards domain knowledge unusually fast. A generalist can model cash flows; you have to also know that a payer contract renewal, a Medicare rate change, or a single retiring physician can move a valuation by millions. That intersection - finance craft plus healthcare fluency - is exactly what firms struggle to hire, and it's very buildable at Vanderbilt. Nashville is arguably the healthcare-services capital of the country: HCA was founded here, and a dense cluster of healthcare PE firms and investment banks operates within two miles of campus."
+ ],
+ misconception: "That you need to be a math genius. Deal math is arithmetic - multiplication and division on a good day. What the job actually demands is stamina, obsessive attention to detail (a wrong number in a live deal is a career event), and genuine curiosity about how businesses make money. The bar is carefulness, not calculus.",
+ titles: [
+ { title: "Investment Banking Analyst - Healthcare", desc: "The classic entry role at Goldman, J.P. Morgan, Leerink, Cain Brothers, TripleTree. Two years of models, pitch books, and live deals." },
+ { title: "Private Equity Analyst / Associate", desc: "Buy-side at firms like Shore Capital or Heritage Group: screen practices, run diligence, support portfolio companies post-close." },
+ { title: "Venture Capital Analyst - Health", desc: "Source and evaluate digital-health and health-services startups at funds like Frist Cressey or Flare Capital. More qualitative, network-driven." },
+ { title: "Corporate Finance / FP&A Analyst (health system)", desc: "Inside HCA, Lifepoint, or VUMC: budgeting, capital planning, M&A support. Saner hours, same toolkit." }
+ ],
+ day: [
+ { time: "8:45a", what: "Scan overnight: a competitor platform just bought a 6-clinic group - pull the multiple if it leaked." },
+ { time: "9:30a", what: "Update the dermatology model with the seller's new volume data; EBITDA bridge moves by $400K." },
+ { time: "11:00a", what: "Diligence call with the target's billing manager about that payer contract renewal." },
+ { time: "1:00p", what: "Build the payer-mix sensitivity table the VP asked for - what happens if the big contract reprices down 5%?" },
+ { time: "3:00p", what: "Draft two pages of the investment memo: market section and risk section." },
+ { time: "5:00p", what: "Turn partner comments on the memo; triple-check every number against the model." },
+ { time: "7:00p", what: "On a live deal this could go late; in a quiet week you're at dinner. Deal flow sets the rhythm." }
+ ],
+ employers: {
+ nashville: ["Heritage Group", "Frist Cressey Ventures", "Council Capital", "Petra Capital Partners", "Cressey & Company", "Brentwood Capital Advisors", "VMG Health", "Martin Ventures", "Jumpstart Health Investors", "HCA (corporate finance)"],
+ national: ["Goldman Sachs Healthcare IB", "J.P. Morgan Healthcare IB", "Morgan Stanley", "Leerink Partners", "Cain Brothers / KeyBanc", "TripleTree", "Houlihan Lokey", "Jefferies", "Piper Sandler", "William Blair", "Ziegler", "Shore Capital Partners", "Welsh Carson", "General Atlantic", "Frazier Healthcare", "Bain Capital (healthcare)", "Kaufman Hall"]
+ },
+ thrive: [
+ "You get satisfaction from a spreadsheet where every number <b>ties</b>",
+ "You want a concrete verdict at the end of your work: a price, a yes, a no",
+ "Pressure and late nights on a live deal sound exciting at least some of the time",
+ "You read business news for fun, or could learn to",
+ "You want optionality - two years of deal experience opens PE, VC, corporate strategy, and business school doors"
+ ]
+ },
+ project: {
+ title: "Project Harmony: should we buy this dermatology group?",
+ role: "Analyst, Cumberland Ridge Capital (a fictional Nashville healthcare private equity firm)",
+ setting: "Live deal, 3 weeks to an indicative offer",
+ duration: "≈ 2 hours",
+ premise: [
+ "A banker just sent your firm a teaser: <b>Delta Dermatology Partners</b>, a 12-clinic dermatology group across Tennessee and Alabama, is for sale. Your fund invests in exactly this kind of business - physician practices that can anchor a regional “platform” and grow by acquiring smaller clinics. The partners like the sector. Your job is to figure out whether they should like <i>this company</i>, and at what price.",
+ "You'll do what a first-year PE analyst actually does on a new deal: normalize the financials, triangulate a valuation, hunt for red flags, and write the memo. Numbers are simplified but the logic is the real thing."
+ ],
+ fictionNote: "Delta Dermatology and Cumberland Ridge Capital are fictional. The valuation benchmarks are real, though: physician practices have been among the most active categories in healthcare private equity, with primary care historically trading around 4-7× EBITDA and specialty groups around 6-12× - exactly the arbitrage that drives roll-up strategies at real Nashville-area firms.",
+ tasks: [
+ {
+ title: "Find the real earnings: build adjusted EBITDA",
+ minutes: 30,
+ skills: ["Financial statements", "EBITDA & add-backs", "Excel thinking"],
+ brief: "<p>Buyers don't value revenue or net income - they value <b>EBITDA</b> (earnings before interest, taxes, depreciation, and amortization), a proxy for the cash the business throws off. And they value <b>adjusted</b> EBITDA: earnings normalized for one-time costs and owner quirks that won't exist after the sale. Finding those adjustments - honestly - is the analyst's first job on any deal.</p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>Delta Dermatology Partners - summary income statement (last twelve months, $000s)</caption><thead><tr><th>Line item</th><th class=\"num\">Amount</th></tr></thead><tbody><tr><td>Revenue</td><td class=\"num\">48,000</td></tr><tr><td>Physician compensation & benefits</td><td class=\"num\">(19,200)</td></tr><tr><td>Clinical staff wages</td><td class=\"num\">(8,600)</td></tr><tr><td>Medical supplies & drugs</td><td class=\"num\">(4,300)</td></tr><tr><td>Rent & facilities (12 clinics)</td><td class=\"num\">(2,900)</td></tr><tr><td>Billing & administration</td><td class=\"num\">(5,000)</td></tr><tr><td>One-time EMR migration project</td><td class=\"num\">(700)</td></tr><tr><td>Depreciation & amortization</td><td class=\"num\">(1,100)</td></tr><tr><td>Interest expense</td><td class=\"num\">(600)</td></tr><tr><td><b>Pre-tax income</b></td><td class=\"num\"><b>5,600</b></td></tr></tbody></table></div><p>Diligence note from the banker: the founding physician pays herself <b>$800K above</b> the market rate a replacement dermatologist would earn.</p>",
+ todo: "<ol><li>Compute <b>reported EBITDA</b>: start from pre-tax income and add back interest, depreciation & amortization.</li><li>Compute <b>adjusted EBITDA</b>: add back genuinely one-time or non-recurring items. Decide - does the EMR project qualify? Does the excess owner compensation?</li><li>Compute the adjusted EBITDA <b>margin</b> (÷ revenue). Specialty practices typically run 15-25% - where does Delta sit?</li></ol>",
+ hint: "Add-backs must pass the question: “Will the new owner truly not pay this cost going forward?” A one-time system migration passes. Above-market owner pay passes <i>if</i> a replacement really would cost $800K less. “Marketing we probably won't do again” does not pass - sellers try that one constantly.",
+ model: "<p><b>Reported EBITDA:</b> 5,600 + 600 interest + 1,100 D&A = <b>$7.3M</b>.</p><p><b>Adjusted EBITDA:</b> 7,300 + 700 (one-time EMR migration) + 800 (excess owner comp, assuming a market-rate replacement) = <b>$8.8M</b>.</p><p><b>Margin:</b> 8.8 / 48.0 ≈ <b>18.3%</b> - comfortably inside the healthy 15-25% band for specialty groups; neither a red flag nor best-in-class.</p><p><b>The habit that matters:</b> you wrote each adjustment down with its justification. In a real memo, every add-back gets a sentence of defense, because the investment committee will attack exactly those numbers - each $1 of dubious add-back inflates the price by $8-9 at deal multiples. That's why sell-side EBITDA is always “adjusted” upward and buyers exist to argue it back down.</p>"
+ },
+ {
+ title: "Put a price on it: valuation by comparables",
+ minutes: 30,
+ skills: ["Valuation multiples", "Comparable analysis", "Sensitivity thinking"],
+ brief: "<p>The workhorse valuation for private healthcare deals is <b>comparable transactions</b>: what have buyers recently paid for similar businesses, expressed as a multiple of EBITDA? Multiples aren't magic numbers - they move with growth, scale, payer mix, and how badly buyers want the sector. Your job is to pick a defensible range, not a false-precision point.</p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>Benchmark: recent physician-practice transaction multiples (EV / adjusted EBITDA)</caption><thead><tr><th>Segment</th><th class=\"num\">Typical range</th><th>What pushes you higher in the range</th></tr></thead><tbody><tr><td>Primary care practices</td><td class=\"num\">4-7×</td><td>Scale, value-based contracts</td></tr><tr><td>Specialty groups (derm, ortho, GI…)</td><td class=\"num\">6-12×</td><td>Platform size, growth, ancillary revenue</td></tr><tr><td>Small “add-on” clinics (1-3 docs)</td><td class=\"num\">3-6×</td><td>Bought by platforms, not funds</td></tr></tbody></table></div><p>Context: Delta is a 12-clinic <b>platform-scale</b> specialty group growing revenue ~8%/year, with the diligence questions from Task 3 still open.</p>",
+ todo: "<ol><li>Choose low / base / high multiples for Delta from the specialty range, and justify each in a phrase.</li><li>Multiply by your adjusted EBITDA from Task 1 to get an <b>enterprise value (EV)</b> range.</li><li>Explain in one sentence why your fund might happily pay 9× for Delta while paying only 5× for a two-doctor clinic down the road - the logic that powers every roll-up strategy.</li></ol>",
+ model: "<p><b>A defensible range:</b> low 7× (platform scale, but payer-concentration risk unresolved), base 9× (solid mid-range specialty platform with growth), high 11× (if diligence comes back clean and a competitive auction develops).</p><p><b>On $8.8M adjusted EBITDA:</b> EV ≈ <b>$62M / $79M / $97M</b>.</p><p><b>The roll-up logic:</b> a platform bought at 9× can acquire small add-on clinics at 4-5× and, once integrated, have them valued inside the platform at the platform's multiple - buying dollars of EBITDA cheap and marking them up by consolidation. That “multiple arbitrage,” plus real operating synergies (shared billing, purchasing, scheduling), is the engine of physician-practice private equity - and understanding it is table stakes for interviews at any healthcare PE firm.</p>"
+ },
+ {
+ title: "Hunt for what kills the deal: diligence red flags",
+ minutes: 30,
+ skills: ["Due diligence", "Risk assessment", "Skeptical reading"],
+ brief: "<p>Valuation tells you what the business is worth <i>if the story is true</i>. Diligence asks whether it's true. The associate hands you three exhibits from the data room and one instruction: <i>“Find what's going to hurt us.”</i></p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>Exhibit A - Revenue by payer</caption><thead><tr><th>Payer</th><th class=\"num\">% of revenue</th><th>Note</th></tr></thead><tbody><tr><td>BlueShield Commercial</td><td class=\"num\">45%</td><td>Contract renews in 14 months</td></tr><tr><td>Medicare</td><td class=\"num\">28%</td><td>Fee schedule set by CMS</td></tr><tr><td>Other commercial</td><td class=\"num\">17%</td><td>Six smaller contracts</td></tr><tr><td>Self-pay / cosmetic</td><td class=\"num\">10%</td><td>Elective, cash-pay</td></tr></tbody></table><table class=\"d\"><caption>Exhibit B - Revenue by physician (top of 18 total)</caption><thead><tr><th>Physician</th><th class=\"num\">% of revenue</th><th class=\"num\">Age</th></tr></thead><tbody><tr><td>Dr. A (founder)</td><td class=\"num\">24%</td><td class=\"num\">63</td></tr><tr><td>Dr. B</td><td class=\"num\">16%</td><td class=\"num\">58</td></tr><tr><td>Dr. C</td><td class=\"num\">12%</td><td class=\"num\">41</td></tr><tr><td>Remaining 15 physicians</td><td class=\"num\">48%</td><td class=\"num\"> - </td></tr></tbody></table><table class=\"d\"><caption>Exhibit C - Same-clinic revenue growth</caption><thead><tr><th>Source of growth</th><th class=\"num\">Contribution to 8% growth</th></tr></thead><tbody><tr><td>Existing 11 clinics (same-store)</td><td class=\"num\">+1.5%</td><td></td></tr><tr><td>New Huntsville clinic (opened last year)</td><td class=\"num\">+6.5%</td><td></td></tr></tbody></table></div>",
+ todo: "<ol><li>Identify the <b>three biggest risks</b> hiding in these exhibits. For each: what it is, why it threatens the valuation, and what you'd request or negotiate to address it.</li><li>Decide: are these deal-killers, price-reducers, or structure-shapers?</li></ol>",
+ model: "<p><b>Risk 1 - Payer concentration.</b> 45% of revenue rides on one commercial contract that reprices in 14 months, right after closing. A 10% rate cut on that contract cuts revenue ~4.5% and, since costs barely move, could erase ~25% of EBITDA. <i>Ask for:</i> the contract, its rate history, and the payer's ASC/office steering policies; consider an earnout tied to the renewal.</p><p><b>Risk 2 - Key-person concentration.</b> Two physicians in their late 50s/60s produce 40% of revenue. If Dr. A retires post-close, a quarter of collections walks out the door. <i>Ask for:</i> multi-year employment agreements with meaningful rollover equity, non-competes, and a recruiting plan - this is usually a structure-shaper, not a killer.</p><p><b>Risk 3 - Growth quality.</b> “8% growth” is really 1.5% same-store plus one new clinic. The base business is nearly flat, so paying a growth multiple for it is dangerous. <i>Ask for:</i> clinic-level P&Ls, the Huntsville ramp curve, and the pipeline of future sites - then consider valuing base and new-clinic growth separately.</p><p><b>Verdict:</b> none are automatic deal-killers; together they justify anchoring at the low end of your range (7-8×) and structuring protections. Notice the pattern - every exhibit looked fine as an average and alarming in its detail. Averages are where risk hides; diligence is the art of disaggregating.</p>"
+ },
+ {
+ title: "Write the one-page investment memo",
+ minutes: 30,
+ skills: ["Investment writing", "Synthesis", "Committee communication"],
+ brief: "<p>Monday's pipeline meeting decides whether Cumberland Ridge submits an indicative offer. The partners will read one page. Investment memos have a rigid, learnable anatomy - and writing one forces the discipline that separates analysis from opinion: every claim needs a number, every risk needs a response.</p>",
+ todo: "<ol><li>Write the memo with these six sections, 1-3 sentences each: <b>Thesis</b> (why this deal, in one sentence) · <b>Business</b> (what it is, size, margin) · <b>Market</b> (why dermatology, why the Southeast) · <b>Valuation</b> (your range and where you'd anchor) · <b>Key risks & mitigants</b> (your top three from Task 3) · <b>Recommendation</b> (proceed / pass, with conditions).</li><li>Rule: every sentence must contain either a number or a decision. Delete anything that's neither.</li></ol>",
+ model: "<p><b>Thesis:</b> Platform-scale dermatology group in a consolidating specialty - a chance to buy $8.8M of adjusted EBITDA at a mid-range multiple and grow through add-on acquisitions at half the entry multiple.</p><p><b>Business:</b> 12 clinics, TN/AL; $48M revenue, $8.8M adjusted EBITDA (18.3% margin); 18 physicians.</p><p><b>Market:</b> Dermatology demand grows with demographics and stays largely outpatient; the Southeast remains fragmented, with 30+ independent practices in Delta's footprint as add-on targets.</p><p><b>Valuation:</b> Comparable specialty platforms trade 6-12×; we see $62-97M EV and would anchor an indicative bid near <b>8× / $70M</b> pending diligence.</p><p><b>Key risks & mitigants:</b> (1) 45% payer concentration with a 14-month renewal - earnout tied to renewal terms; (2) two senior physicians = 40% of revenue - rollover equity and employment agreements; (3) same-store growth of only 1.5% - underwrite base business flat, value new-clinic pipeline separately.</p><p><b>Recommendation:</b> Proceed to indicative offer at 8× with the three protections above; walk if the BlueShield contract shows repricing risk beyond 5%.</p><p><b>Compare your version:</b> the most common miss is a thesis that describes the company instead of stating why <i>this buyer</i> wins by owning it. “Nice business” is not a thesis; “cheap EBITDA plus multiple arbitrage” is.</p>"
+ }
+ ]
+ },
+ next: {
+ courses: [
+ "<b>Financial Economics or Corporate Finance</b> coursework - accounting and valuation are the screen",
+ "<b>MHS 2140 (Health Care in the U.S.)</b> - payer mix and reimbursement fluency is your differentiator vs. other finance candidates",
+ "<b>Economics electives</b>: health economics, industrial organization",
+ "Owen undergrad-accessible business courses; consider the Financial Economics or Corporate Strategy minor"
+ ],
+ campus: [
+ "<b>Vanderbilt Investment / Finance Club</b> - stock pitches and modeling reps",
+ "<b>Girls Who Invest</b> and <b>SEO Career</b> - structured pipelines into buy-side and banking for eligible students",
+ "<b>BLK Capital Management</b> - student-run hedge fund experience",
+ "Healthcare case competitions - a healthcare-angle stock pitch stands out instantly"
+ ],
+ experiences: [
+ "Healthcare IB summer analyst programs: <b>Goldman, J.P. Morgan, Morgan Stanley, Leerink, Cain Brothers, Houlihan Lokey, TripleTree, Ziegler</b> - sophomore-spring applications",
+ "Nashville buy-side internships: <b>Shore Capital PE Summer Analyst</b>, <b>Heritage Group</b>, <b>Council Capital</b>, <b>Petra Capital</b>, <b>Brentwood Capital Advisors</b>",
+ "Early-insight programs: Goldman Possibilities, J.P. Morgan Early Insight, Morgan Stanley Early Insights - freshman/sophomore friendly",
+ "<b>VMG Health</b> (Nashville) - healthcare valuation analyst roles, a underrated on-ramp to the whole sector"
+ ],
+ now: [
+ "Do a free Forage IB simulation (J.P. Morgan or Bank of America) this week - bankers actually notice it on freshman resumes",
+ "Learn the three financial statements cold, then build one practice LBO from a free Wall Street Prep/Breaking Into Wall Street sample",
+ "Follow one healthcare deal in the news end-to-end and write a half-page: who bought whom, at what multiple, and why",
+ "Ask your advisor which Vanderbilt alumni are at Leerink, Cain Brothers, and the Nashville PE funds - warm intros beat cold applications"
+ ],
+ advisorNote: "The advising wiki tracks 25+ healthcare IB and PE internship listings (including every major healthcare bank's summer analyst program), Nashville's full buy-side landscape, and alumni contacts in several of these firms. Banking recruiting timelines are brutal - sophomore spring for junior summer - so if this track clicked, get the timeline from your advisor now."
+ }
+});
+
+</script>
+<script>
+/* Track: Healthcare Operations & Administration */
+window.EXPLORER_TRACKS = window.EXPLORER_TRACKS || [];
+window.EXPLORER_TRACKS.push({
+ id: "operations-administration",
+ name: "Operations & Administration",
+ short: "Somebody decides how many nurses to staff Friday night, why the ER wait is 4 hours, and where the new clinic goes. That somebody doesn't wear scrubs.",
+ color: "#4a6d8c",
+ wash: "#e6edf3",
+ glyph: "flow",
+ entryTitle: "Entry role: Ops Coordinator",
+ tagline: "Hospitals are among the most complex operations humans run - a mid-size one is a hotel, restaurant, pharmacy, lab, and trauma unit sharing one building, open 24/7, where delay can mean harm. Administrators make it run: staffing, patient flow, budgets, quality, growth. It's the career for people who fix systems, not symptoms.",
+ stats: [
+ { k: "Entry job titles", v: "Operations Coordinator, Admin Intern/Fellow" },
+ { k: "Field outlook", v: "+28% growth for health services managers (BLS)" },
+ { k: "Signature deliverable", v: "A process that measurably improved" },
+ { k: "Nashville advantage", v: "HCA's hometown - the hospital capital of America" }
+ ],
+ field: {
+ what: [
+ "Every metric a hospital lives or dies by - how long patients wait, whether the OR starts on time, whether the nurse-to-patient ratio is safe, whether the unit hits budget - belongs to an administrator. The work is deeply concrete: you can walk to the problem, watch it happen, and measure whether your fix worked. That feedback loop is what people in this field say they love most.",
+ "Career paths run two ways. The <b>hospital route</b>: administrative intern or fellow → department operations manager → service-line director → hospital executive. The <b>corporate route</b>, huge in Nashville: analyst and coordinator roles at the headquarters of companies that run hundreds of facilities (HCA, Lifepoint, CHS, Surgery Partners), working on staffing models, throughput, supply chain, and revenue cycle across the whole portfolio.",
+ "The toolkit blends people and numbers roughly 50/50. Numbers: Excel, dashboards, Lean Six Sigma process improvement, budget variance. People: physicians and nurses don't report to you and are busy saving lives - you change how a unit works by earning trust, not by memo. If you've ever reorganized a chaotic group project into something that ran smoothly, you already know whether this feels like you."
+ ],
+ misconception: "That administration is the boring, paper-pushing side of healthcare. The ER wait time, the surgery scheduled six weeks out, the nurse working her third double - those are operations problems, and fixing them changes more patient lives per year than most individual clinicians can. Administrators just do it at the level of the <i>system</i>.",
+ titles: [
+ { title: "Administrative Intern / Fellow", desc: "Rotational entry at big systems (Mayo, Cleveland Clinic, VUMC, Stanford) - project work across departments, mentored by executives." },
+ { title: "Operations Coordinator / Analyst (HCA, Lifepoint)", desc: "Corporate-side entry in Nashville: throughput dashboards, staffing models, performance reviews across facilities." },
+ { title: "Revenue Cycle Analyst (Parallon, Ensemble, R1)", desc: "The money-side of operations: billing accuracy, denials, collections - a massive, hiring-heavy Nashville niche." },
+ { title: "Practice / Clinic Manager", desc: "Run the whole operation of an outpatient clinic - staffing, scheduling, budget, patient experience. Fast P&L ownership." }
+ ],
+ day: [
+ { time: "7:30a", what: "Morning huddle on the med-surg unit: two nurses called out; rework today's staffing grid before 8am." },
+ { time: "8:30a", what: "Pull yesterday's ED throughput dashboard; door-to-provider crept up again - flag it for the flow committee." },
+ { time: "10:00a", what: "Walk the discharge process with a case manager to see where the 2-hour delay actually happens." },
+ { time: "12:00p", what: "Lunch with your mentor, the associate COO, who explains how the new payer contract changes unit budgets." },
+ { time: "1:30p", what: "Build the business case for a second CT tech on weekends: volume data, wait times, overtime costs." },
+ { time: "3:30p", what: "Present pilot results to the nursing director - LWBS rate down 40%; she wants it on two more units." },
+ { time: "5:00p", what: "Update the project tracker; hospitals run on operating rhythm, and most nights you're out by dinner." }
+ ],
+ employers: {
+ nashville: ["HCA Healthcare (HQ)", "Vanderbilt University Medical Center", "Ascension Saint Thomas", "Lifepoint Health", "Community Health Systems", "Surgery Partners", "Brookdale Senior Living", "Premise Health", "Parallon", "HealthTrust", "Ardent Health"],
+ national: ["Mayo Clinic", "Cleveland Clinic", "Mass General Brigham", "Northwell Health", "Intermountain Health", "Stanford Health Care", "Houston Methodist", "SSM Health", "Tenet Healthcare", "UCLA Health", "Emory Healthcare", "AdventHealth"]
+ },
+ thrive: [
+ "You notice broken processes everywhere - lines, forms, handoffs - and itch to fix them",
+ "You'd rather <b>walk to</b> a problem and watch it than model it from afar",
+ "You're energized by people: persuading, coordinating, leading without authority",
+ "You want visible, local impact - <i>this</i> hospital, <i>this</i> unit, measurably better",
+ "You like the idea of running something big someday - a service line, a hospital, a system"
+ ]
+ },
+ project: {
+ title: "Fix the Friday-night emergency department",
+ role: "Administrative intern, Midstate Regional Medical Center (a fictional 380-bed Nashville-area hospital)",
+ setting: "8-week internship project, reporting to the VP of Operations",
+ duration: "≈ 2 hours",
+ premise: [
+ "Patient complaints about ER waits have doubled, a local news station just ran a story about a five-hour Friday-night wait, and the percentage of patients who <b>leave without being seen (LWBS)</b> - walk out before a provider ever examines them - is rising. LWBS is the metric hospitals fear: it's a safety risk, a lawsuit risk, and lost revenue, all in one number.",
+ "The VP of Operations hands you the project: <i>“Figure out what's actually broken, and bring me something we can pilot in 90 days.”</i> You'll work it the way hospital operators do: walk the process, read the data, find the root cause, then design a measurable fix."
+ ],
+ fictionNote: "Midstate Regional is fictional and the data is simplified, but ED throughput is the canonical hospital-operations problem - VUMC, HCA, and Ascension all have teams working on exactly this, using exactly these methods (process mapping, throughput metrics, Lean root-cause analysis, 90-day pilots).",
+ tasks: [
+ {
+ title: "Walk the process: map the patient's journey",
+ minutes: 25,
+ skills: ["Process mapping", "Gemba observation", "Systems thinking"],
+ brief: "<p>Lean operations has a rule: <i>go and see</i> (the “gemba walk”). Before touching data, you spend Friday evening in the ED following the process a patient experiences. Your notes: patients check in at a desk, wait, get triaged by a nurse (vitals, acuity score), wait again, get a bed <i>if one's open</i>, wait for the physician, then labs/imaging, then the decision - discharge home or admit to the hospital. Admitted patients wait in ED beds until an inpatient bed opens (“boarding”).</p>",
+ todo: "<ol><li>Draw the journey as a simple flow: every step in a box, every <b>wait</b> as a triangle between boxes. Aim for 8-12 steps from arrival to departure.</li><li>Mark the three places waiting seemed worst in your observation.</li><li>For each wait, write what the patient is waiting <i>for</i> - a person? a room? a decision? a test result? That distinction drives everything later.</li></ol>",
+ model: "<p>A clean map looks like:</p><ol><li><b>Arrival → check-in</b> (wait: registration clerk)</li><li><b>Check-in → triage</b> (wait: triage nurse - one on duty)</li><li><b>Triage → ED bed</b> (wait: <b>an open bed</b>, often the longest queue)</li><li><b>Bed → provider exam</b> (wait: physician/APP availability)</li><li><b>Orders → labs/imaging → results</b> (wait: test turnaround)</li><li><b>Results → disposition decision</b> (wait: physician re-review)</li><li><b>If discharged:</b> paperwork → departure</li><li><b>If admitted:</b> wait for inpatient bed = <b>boarding</b> (the patient occupies an ED bed for hours - which is why step 3's queue exists)</li></ol><p><b>The key structural insight:</b> the waits aren't independent. Boarding (step 8) consumes the beds that step 3 is queuing for. An ED that looks understaffed is often actually <i>blocked from downstream</i> - the bottleneck lives outside the ED, in how fast the inpatient units discharge. Hold that thought for Task 3.</p>"
+ },
+ {
+ title: "Read the numbers like an operator",
+ minutes: 30,
+ skills: ["Throughput metrics", "Excel analysis", "Pattern finding"],
+ brief: "<p>Monday morning, the data analyst sends you three months of throughput data cut by shift. Hospital operators live on three metrics: <b>door-to-provider time</b> (arrival until a clinician sees you), <b>length of stay (LOS)</b> for discharged patients, and <b>LWBS rate</b>. Averages hide problems, so the data comes segmented.</p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>Midstate ED throughput by shift (3-month averages)</caption><thead><tr><th>Shift block</th><th class=\"num\">Arrivals/day</th><th class=\"num\">Door-to-provider (median min)</th><th class=\"num\">LOS, discharged (hrs)</th><th class=\"num\">LWBS rate</th></tr></thead><tbody><tr><td>Weekday days (7a-3p)</td><td class=\"num\">58</td><td class=\"num\">22</td><td class=\"num\">3.1</td><td class=\"num\">0.9%</td></tr><tr><td>Weekday evenings (3p-11p)</td><td class=\"num\">74</td><td class=\"num\">41</td><td class=\"num\">4.0</td><td class=\"num\">2.8%</td></tr><tr><td>Fri-Sat evenings (3p-11p)</td><td class=\"num\">92</td><td class=\"num\">68</td><td class=\"num\">5.2</td><td class=\"num\">6.5%</td></tr><tr><td>Nights (11p-7a)</td><td class=\"num\">31</td><td class=\"num\">18</td><td class=\"num\">2.7</td><td class=\"num\">0.7%</td></tr></tbody></table></div><p>Finance adds: the average ED visit generates ≈ <b>$650</b> in net revenue, and ~18% of ED patients are admitted (an admission generates far more).</p>",
+ todo: "<ol><li>Where is the problem concentrated? Say it precisely - which shifts, how much worse than baseline.</li><li>Estimate <b>patients lost to LWBS per year</b> on Fri-Sat evenings (arrivals × rate × 2 days × 52 weeks) and the direct revenue those walkouts represent.</li><li>Name one reason the true cost is larger than your revenue number.</li></ol>",
+ model: "<p><b>1 - The problem is Friday-Saturday evenings, full stop.</b> Door-to-provider is 3× the weekday-day baseline (68 vs 22 min) and LWBS is 7× (6.5% vs 0.9%). Nights are fine; this is a <i>peak-load</i> problem, not a general one.</p><p><b>2 - The walkout math:</b> 92 arrivals × 6.5% ≈ 6 LWBS per evening × 2 evenings × 52 weeks ≈ <b>620 patients/year</b>. At $650 average, that's <b>≈ $400K/year in direct revenue</b> walking out the door - before counting the ~18% who would have been admitted, worth several times more.</p><p><b>3 - The bigger cost:</b> LWBS patients are untreated emergency patients - some come back sicker (safety and liability), some never come back (lost lifetime relationship), and public wait times shape the hospital's reputation and referral flows. Operators quantify what they can and name what they can't - your slide should do both.</p>"
+ },
+ {
+ title: "Find the root cause, not the loudest symptom",
+ minutes: 30,
+ skills: ["Root-cause analysis", "5 Whys", "Constraint thinking"],
+ brief: "<p>The obvious fix - “hire more ER doctors” - is expensive and, if the bottleneck is beds rather than clinicians, useless. Lean gives you the <b>5 Whys</b>: keep asking why until you hit a cause you can act on. The analyst pulls two more data points for Friday-Saturday evenings: <b>ED boarding</b> averages 9 patients (vs 2 on weekday days) - a quarter of the ED's 36 beds are occupied by patients already admitted. And on the inpatient side, <b>most discharges complete between 4pm and 7pm</b>, even though physicians write discharge orders in the morning.</p>",
+ todo: "<ol><li>Run the 5 Whys starting from “patients wait 68 minutes to see a provider on Friday nights.” Use the boarding and discharge-timing facts.</li><li>Identify the <b>constraint</b>: which single resource, freed up, would relieve the most pressure?</li><li>List one contributing cause the 5 Whys chain does <i>not</i> explain (there's usually more than one root).</li></ol>",
+ hint: "Follow the beds. Why are ED beds full? Why are admitted patients still in them? Why aren't inpatient beds ready? Why do discharges finish at 5pm when the orders were written at 10am?",
+ model: "<p><b>The chain:</b> Patients wait to be seen → because ED beds are full → because ~9 beds hold <i>boarding</i> patients already admitted → because inpatient beds aren't ready until evening → because discharges complete at 4-7pm → because the steps after the morning discharge order (final labs, pharmacy meds-to-go, transport, room cleaning) are nobody's coordinated job - each queues behind other work. <b>Root cause: the discharge process upstream, not the ED itself.</b></p><p><b>The constraint:</b> inpatient bed availability between 3pm and 9pm. Free beds earlier in the day and boarding drains, ED beds open, door-to-provider falls - without hiring a single additional ED clinician.</p><p><b>What the chain doesn't explain:</b> even with zero boarding, Fri-Sat arrivals (92 vs 58) exceed weekday staffing plans - there's a genuine peak-staffing gap in triage and fast-track for low-acuity patients. Real operational problems almost always have two or three interacting roots; a fix that addresses only one underdelivers. That's why Task 4 pairs an upstream fix with an in-ED fix.</p>"
+ },
+ {
+ title: "Design the 90-day pilot the VP can say yes to",
+ minutes: 35,
+ skills: ["Intervention design", "KPIs & targets", "Change management"],
+ brief: "<p>Executives don't approve “ideas” - they approve <b>pilots</b>: a specific change, on a specific unit, for a specific period, with baseline metrics, targets, and an owner. Your VP wants exactly that, one page. She also warns you: <i>“The hospitalists and nurses have seen ten flavor-of-the-month initiatives. Tell me why this one sticks.”</i></p>",
+ todo: "<ol><li>Choose <b>two interventions</b> - one attacking the upstream root cause (discharge timing), one attacking the peak-load gap (Fri-Sat evenings). Describe each in two sentences.</li><li>Build the measurement table: 3-4 KPIs, each with current baseline (from Task 2) and a 90-day target.</li><li>Answer the stickiness question: name the two stakeholder groups whose behavior must change, and one concrete thing you'd do for each so the change survives month four.</li></ol>",
+ model: "<p><b>Intervention 1 - “Discharge by noon” on two pilot inpatient units.</b> Discharge steps start the afternoon <i>before</i> (pharmacy, transport, education queued at order time); a 9am huddle names every discharge-ready patient; environmental services pre-positions room cleaning. Goal: majority of discharges complete before 2pm, opening beds before the ED's evening peak.</p><p><b>Intervention 2 - Fri-Sat evening fast-track + provider-in-triage.</b> From 3-11pm Friday and Saturday, one APP staffs a 4-bed fast-track for low-acuity patients, and triage starts orders immediately so tests run during the wait instead of after it.</p><p><b>The scoreboard:</b></p><div class=\"data-block\"><table class=\"d\"><thead><tr><th>KPI</th><th class=\"num\">Baseline</th><th class=\"num\">90-day target</th></tr></thead><tbody><tr><td>Door-to-provider, Fri-Sat eve (median)</td><td class=\"num\">68 min</td><td class=\"num\">≤ 40 min</td></tr><tr><td>LWBS rate, Fri-Sat eve</td><td class=\"num\">6.5%</td><td class=\"num\">≤ 3.0%</td></tr><tr><td>ED boarding at 5pm (avg patients)</td><td class=\"num\">9</td><td class=\"num\">≤ 5</td></tr><tr><td>Discharges complete by 2pm (pilot units)</td><td class=\"num\">~25%</td><td class=\"num\">≥ 50%</td></tr></tbody></table></div><p><b>Stickiness:</b> Hospitalists - co-design the huddle with their medical director and report <i>their</i> unit's boarding relief back to them monthly (physicians respond to their own data). Nurses - the discharge coordination work is real added labor, so fund a unit-clerk hour shift rather than stacking it on the charge nurse, and put a bedside nurse on the pilot team from day one. A pilot designed <i>with</i> the people who work the process is the difference between a 90-day blip and a new normal.</p>"
+ }
+ ]
+ },
+ next: {
+ courses: [
+ "<b>MHS minor</b> - health policy, economics, and delivery-system courses; the standard Vanderbilt foundation",
+ "<b>MHS 3040: Designing Healthy Publics</b> - uses Nashville itself as the case study",
+ "Statistics + Excel/data coursework - operators live in dashboards",
+ "Grad paths to know about: Vanderbilt <b>MMHC</b>, MBA Healthcare concentration, or an MHA elsewhere - many roles fund these later"
+ ],
+ campus: [
+ "<b>IHI Open School</b> (free for students) - quality-improvement certificates hospitals genuinely recognize",
+ "<b>ACHE student membership</b> - the professional home of hospital administrators; local chapter events in Nashville",
+ "<b>Vanderbilt Business & Medicine Club</b>, <b>HCA-adjacent case competitions</b> (UAB Health Administration case comp)",
+ "Volunteer at VUMC - the badge access and unit exposure make every later interview more concrete"
+ ],
+ experiences: [
+ "<b>HCA Pathways Internship</b> - the marquee Nashville corporate-operations internship",
+ "<b>VUMC student employment & administrative roles</b> - operations exposure without leaving campus",
+ "Summer administrative internships: <b>Cleveland Clinic, Mayo, Stanford, Houston Methodist, SSM Health, UCLA Health, Emory</b> (the wiki tracks all of these)",
+ "Revenue-cycle and supply-chain analyst roles: <b>Parallon, Ensemble, HealthTrust</b> - underrated, hiring-heavy entry doors"
+ ],
+ now: [
+ "Complete the free IHI Open School Basic Certificate (~15 hours) - put it on your resume this month",
+ "Take a Lean Six Sigma Yellow Belt fundamentals course (ASQ) - DMAIC vocabulary comes up in every ops interview",
+ "Shadow one hospital administrator for a day - your advisor can arrange this through VUMC or alumni",
+ "Read one week of Becker's Hospital Review headlines; fluency in the industry's daily conversation is cheap and visible"
+ ],
+ advisorNote: "Nashville is the single best city in America to start a hospital-operations career, and the advising wiki reflects it: HCA, Lifepoint, Ascension, CHS, and VUMC internship listings, 12+ summer administrative internship programs nationwide, and alumni in operations roles across the city. Ask your advisor for the HCA Pathways prep guide and an alumni introduction."
+ }
+});
+
+</script>
+<script>
+/* Track: Health Data, Analytics & Technology */
+window.EXPLORER_TRACKS = window.EXPLORER_TRACKS || [];
+window.EXPLORER_TRACKS.push({
+ id: "data-analytics-technology",
+ name: "Data, Analytics & Technology",
+ short: "Every visit, prescription, and payment leaves a data trail. The people who can read it decide where billions in care go next - and they're chronically scarce.",
+ color: "#7d5b8e",
+ wash: "#efe8f2",
+ glyph: "grid",
+ entryTitle: "Entry role: Data Analyst",
+ tagline: "Healthcare generates more data than almost any industry and understands it worse. Analysts and technologists turn claims, medical records, and lab feeds into the answers that run the system: who's getting sicker, what's working, where money leaks. If you like finding patterns and explaining them to humans, this is the highest-leverage seat in the building.",
+ stats: [
+ { k: "Entry job titles", v: "Data Analyst, Analytics Consultant" },
+ { k: "The one skill", v: "SQL - cited in nearly every posting" },
+ { k: "Field outlook", v: "~21-23% growth for analyst roles (BLS)" },
+ { k: "Vanderbilt advantage", v: "A top biomedical informatics department" }
+ ],
+ field: {
+ what: [
+ "When a health plan wants to know which members will end up in the hospital next quarter, when a hospital wants to know why Tuesdays overwhelm the infusion center, when a pharma company wants to know how a drug performs outside its trial - a data analyst answers, usually by querying enormous databases of <b>claims</b> (the bills insurers pay) and <b>EHR data</b> (the clinical record). The raw material is messy, coded, and vast; the job is turning it into a decision.",
+ "The day-to-day: write SQL against the data warehouse, clean and shape the result in Python or R, build the Tableau or Power BI dashboard, then - the part that determines your career ceiling - <b>explain it</b> to clinicians and executives who will never read a query. Employers say the scarce combination isn't technical skill or healthcare knowledge; it's both in one person who can also communicate.",
+ "The technology side widens the lane beyond analysis: implementation and technical-solutions roles at EHR vendors (Epic, Oracle Health), product and data roles at health-tech companies (Flatiron, Komodo, Tempus, athenahealth), and increasingly ML/AI work on risk prediction and clinical text. You don't need a CS degree for most of it - Epic famously hires strong liberal-arts graduates and trains them - but SQL fluency is the near-universal ticket in."
+ ],
+ misconception: "That you need to be a software engineer. Most healthcare analytics roles want SQL + Excel + one visualization tool + healthcare vocabulary - a stack you can genuinely build in two semesters of deliberate practice. The rarer skill (and the one interviews probe) is judgment: knowing what the data can't tell you, and saying so.",
+ titles: [
+ { title: "Healthcare Data Analyst", desc: "At a plan, system, or vendor: SQL, dashboards, and analyses that answer operational and clinical questions. The standard entry door." },
+ { title: "Analytics / Decision Science Consultant (Optum, IQVIA, ZS)", desc: "Client-facing analytics - pharma commercial data, payer analytics, real-world evidence. Consulting pace, data depth." },
+ { title: "Implementation / Technical Solutions (Epic, Oracle Health)", desc: "Configure and troubleshoot the systems hospitals run on. Hires all majors; trains intensely; great industry education." },
+ { title: "Product / Data roles at health-tech startups", desc: "Flatiron, Komodo, Tempus, and Nashville's own health-tech cluster - smaller teams, broader ownership, faster feedback." }
+ ],
+ day: [
+ { time: "9:00a", what: "Standup with the care-management team: they want last month's readmission numbers cut by region." },
+ { time: "9:30a", what: "Write the SQL; discover 4% of discharge dates are null and chase down why before trusting anything." },
+ { time: "11:30a", what: "Pair with a clinical pharmacist to sanity-check your medication-adherence logic against reality." },
+ { time: "1:00p", what: "Rebuild the readmissions dashboard; delete two charts nobody used and add the one they kept asking for." },
+ { time: "2:30p", what: "Present findings to the VP: three slides, one recommendation, zero SQL on screen." },
+ { time: "4:00p", what: "Document the query and push it to the team repo; future-you says thanks." },
+ { time: "5:30p", what: "Skim a health-tech newsletter; the tools change fast and the curious get promoted." }
+ ],
+ employers: {
+ nashville: ["HCA Healthcare ITG", "BlueCross BlueShield of Tennessee", "Embold Health", "XSolis", "Medalogix", "Lirio", "HealthStream", "Cedar Gate Technologies", "VUMC (analytics & informatics)"],
+ national: ["Optum / UnitedHealth", "IQVIA", "Komodo Health", "Flatiron Health", "Tempus", "Epic Systems", "Oracle Health", "athenahealth", "Arcadia", "Datavant", "Truveta", "Innovaccer", "Milliman", "ZS Associates", "Clarify Health"]
+ },
+ thrive: [
+ "Finding the pattern in a messy dataset feels like a puzzle you'd do for free",
+ "You're the one who makes the group project's spreadsheet actually work",
+ "You like proof - “I think” bothers you when “the data shows” is available",
+ "Explaining a technical thing simply gives you satisfaction, not annoyance",
+ "You want a skill set that transfers anywhere in healthcare (it does - every track in this explorer needs analysts)"
+ ]
+ },
+ project: {
+ title: "Find the readmission leak at Bellhaven Health Plan",
+ role: "Analytics intern, Bellhaven Health Plan (a fictional regional insurer, ~400,000 members)",
+ setting: "4-week sprint for the VP of Medical Management",
+ duration: "≈ 2 hours",
+ premise: [
+ "Hospital <b>readmissions</b> - a patient discharged, then back in a hospital bed within 30 days - are healthcare's signature failure metric: bad for the patient, expensive for the plan, and often preventable. Bellhaven's readmission spending is up 11% year over year, and the VP of Medical Management wants to know <b>where it's concentrated and what to do about it</b>.",
+ "You're the intern on the analytics team. You'll do the real sequence: learn to read claims data, write the query that defines the metric, find the actionable pattern in the results, and brief an executive who has eight minutes and no patience for jargon."
+ ],
+ fictionNote: "Bellhaven is fictional; the data is simplified. But 30-day readmissions is a real, canonical analytics assignment - CMS penalizes hospitals for excess readmissions, every plan tracks them, and versions of these exact tasks run daily at Optum, BCBS plans, and health-system analytics teams.",
+ tasks: [
+ {
+ title: "Learn to read claims: find the readmissions by hand",
+ minutes: 25,
+ skills: ["Claims data literacy", "ICD-10 basics", "Careful definition"],
+ brief: "<p>Claims data is the plan's ledger of care: every hospital stay becomes a row with a member ID, dates, diagnosis codes (<b>ICD-10</b> - e.g., <code>I50.9</code> is heart failure), and the amount paid. Before anyone writes code, an analyst must be able to apply the metric definition <i>by hand</i> - because if the definition is fuzzy, the query will be confidently wrong.</p><p><b>Definition you're given:</b> a readmission is any inpatient admission occurring within 30 days of a <i>prior discharge</i> for the <i>same member</i>, for any cause.</p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>Inpatient admissions extract (one quarter, three members)</caption><thead><tr><th>Member</th><th>Admit</th><th>Discharge</th><th>Primary dx</th><th>Meaning</th><th class=\"num\">Paid</th></tr></thead><tbody><tr><td>M-1041</td><td>Mar 2</td><td>Mar 6</td><td>I50.9</td><td>Heart failure</td><td class=\"num\">$14,200</td></tr><tr><td>M-1041</td><td>Mar 21</td><td>Mar 24</td><td>I50.9</td><td>Heart failure</td><td class=\"num\">$11,800</td></tr><tr><td>M-1041</td><td>Jun 10</td><td>Jun 13</td><td>I50.9</td><td>Heart failure</td><td class=\"num\">$12,400</td></tr><tr><td>M-2203</td><td>Apr 11</td><td>Apr 12</td><td>N39.0</td><td>Urinary tract infection</td><td class=\"num\">$6,100</td></tr><tr><td>M-2203</td><td>May 20</td><td>May 22</td><td>N39.0</td><td>Urinary tract infection</td><td class=\"num\">$7,300</td></tr><tr><td>M-3178</td><td>May 1</td><td>May 3</td><td>J18.9</td><td>Pneumonia</td><td class=\"num\">$9,800</td></tr><tr><td>M-3178</td><td>May 28</td><td>May 30</td><td>J44.1</td><td>COPD exacerbation</td><td class=\"num\">$10,600</td></tr></tbody></table></div>",
+ todo: "<ol><li>Apply the definition row by row: which admissions count as readmissions? (Careful: the clock runs from the prior <b>discharge</b> date, not the admit date.)</li><li>One member has two admissions for the same condition that are <i>not</i> a readmission - which, and why?</li><li>The definition says “any cause.” One pair of admissions has different diagnoses - does it count? Why might the plan define it that way?</li></ol>",
+ model: "<p><b>The readmissions:</b> M-1041's Mar 21 admission (15 days after the Mar 6 discharge) and M-3178's May 28 admission (25 days after the May 3 discharge). Two readmissions in the extract.</p><p><b>The non-readmission pair:</b> M-2203 - May 20 is 38 days after the Apr 12 discharge. Outside the window, so it's a new admission, even though it's the same diagnosis. (M-1041's Jun 10 stay is likewise ~78 days out - chronic illness, recurring admissions, but not “readmissions” by this metric.)</p><p><b>The any-cause pair:</b> M-3178 went in for pneumonia and returned with a COPD exacerbation - different codes, still counts. Plans use all-cause definitions because post-discharge deterioration often presents as a related-but-different diagnosis, and because condition-specific definitions invite gaming. Real production logic adds exclusions you'd learn on the job (planned readmissions like scheduled chemo, same-day transfers between facilities) - noticing that the simple definition has edge cases is exactly the instinct analytics managers hire for.</p>"
+ },
+ {
+ title: "Write the SQL that computes it at scale",
+ minutes: 30,
+ skills: ["SQL", "Self-joins", "Metric implementation"],
+ brief: "<p>Seven rows by hand; four million by query. Your team's warehouse has this table:</p><pre class=\"code\">admissions(\n member_id varchar,\n admit_dt date,\n discharge_dt date,\n dx_group varchar, -- e.g. 'Heart failure', 'COPD'\n discharge_disp varchar, -- 'Home', 'Home + home health', 'Skilled nursing'\n paid_amt numeric\n)</pre><p>The classic technique: <b>join the table to itself</b> - pair every admission with any <i>later</i> admission for the same member, then keep the pairs where the gap is ≤ 30 days. Try writing it before peeking; “close but in pseudocode” is a completely successful outcome for this task.</p>",
+ todo: "<ol><li>Write a query (or careful pseudocode) that counts 30-day readmissions <b>by dx_group of the original admission</b>.</li><li>State in one sentence what could go wrong if the same discharge has <i>two</i> later admissions within 30 days - does your query count one readmission or two?</li></ol>",
+ model: "<pre class=\"code\">SELECT a.dx_group,\n COUNT(DISTINCT a.member_id || a.discharge_dt) AS discharges_w_readmit,\n COUNT(*) AS readmit_events\nFROM admissions a\nJOIN admissions r\n ON r.member_id = a.member_id\n AND r.admit_dt > a.discharge_dt\n AND r.admit_dt <= a.discharge_dt + INTERVAL '30 days'\nGROUP BY a.dx_group\nORDER BY discharges_w_readmit DESC;</pre><p><b>How it works:</b> the join pairs each admission <code>a</code> with every later admission <code>r</code> for the same member inside the window. Grouping by the <i>original</i> admission's diagnosis attributes the readmission to the condition the member was first treated for - which is what the VP wants to target.</p><p><b>The double-count trap:</b> if one discharge is followed by two admissions in 30 days, the raw join yields two rows. Whether that's right depends on the question - “readmission <i>events</i>” counts both; “discharges followed by ≥1 readmission” (the standard rate's numerator) needs the <code>DISTINCT</code>. The habit of asking <i>“one per discharge or one per event?”</i> before running anything is worth more than syntax - definitions, not code, are where healthcare analytics goes wrong.</p>"
+ },
+ {
+ title: "Find the actionable pattern - and the trap in it",
+ minutes: 30,
+ skills: ["Segmentation", "Opportunity sizing", "Correlation vs. causation"],
+ brief: "<p>Your query runs. Segmented by condition and by <b>discharge disposition</b> (where the patient went after the hospital), the year's results:</p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>30-day readmission rate by condition × discharge disposition (12 months)</caption><thead><tr><th>Condition</th><th class=\"num\">Discharges</th><th class=\"num\">Home, no services</th><th class=\"num\">Home + home health</th><th class=\"num\">Skilled nursing</th></tr></thead><tbody><tr><td>Heart failure</td><td class=\"num\">2,400</td><td class=\"num\">28%</td><td class=\"num\">14%</td><td class=\"num\">22%</td></tr><tr><td>COPD</td><td class=\"num\">1,800</td><td class=\"num\">22%</td><td class=\"num\">15%</td><td class=\"num\">20%</td></tr><tr><td>Pneumonia</td><td class=\"num\">2,100</td><td class=\"num\">15%</td><td class=\"num\">11%</td><td class=\"num\">18%</td></tr><tr><td>Joint replacement</td><td class=\"num\">1,500</td><td class=\"num\">6%</td><td class=\"num\">5%</td><td class=\"num\">9%</td></tr></tbody></table></div><p>Context: 55% of heart-failure discharges go home with no services (≈1,320/yr). A heart-failure readmission costs the plan ≈ <b>$16,000</b>. The clinical team proposes a <b>transitional-care program</b> - discharge follow-up calls plus a guaranteed cardiology visit within 7 days - costing ≈ <b>$250 per enrolled member</b>, with published evidence of cutting readmissions ~20% (relative).</p>",
+ todo: "<ol><li>Name the hotspot - the single segment where the problem concentrates.</li><li>Size the opportunity: if the $250 program enrolled all 1,320 heart-failure/home/no-services members and cut their readmissions 20%, what's the annual net savings?</li><li>Now the trap: the table seems to show home health <i>causes</i> lower readmissions (14% vs 28%). Why is that conclusion not safe - and what would you propose to test it?</li></ol>",
+ model: "<p><b>1 - The hotspot:</b> heart failure discharged home without services: the worst rate (28%) on the biggest base (1,320 discharges/yr) ≈ 370 readmissions - more than any other cell in the table.</p><p><b>2 - The math:</b> 20% relative reduction on 370 ≈ <b>74 avoided readmissions</b> × $16,000 ≈ <b>$1.18M saved</b>, against 1,320 × $250 = <b>$330K program cost</b> → net ≈ <b>$850K/year</b>, roughly a 3.6× return - before counting the human value of 74 people not returning to a hospital bed.</p><p><b>3 - The trap:</b> discharge disposition isn't random. Clinicians <i>choose</i> who gets home health - sicker patients may get it (biasing its rate up) or better-supported patients may accept it (biasing it down). The 28%-vs-14% gap mixes the service's effect with the selection. So don't claim causation; propose a <b>pilot</b>: enroll a randomized (or carefully matched) subset of the hotspot group in the transitional-care program and compare readmission rates against the rest. Analysts who volunteer the caveat <i>and</i> the test design are the ones executives learn to trust - this single distinction separates junior from senior analytics work.</p>"
+ },
+ {
+ title: "Brief the executive: eight minutes, no jargon",
+ minutes: 30,
+ skills: ["Data storytelling", "Dashboard design", "Executive communication"],
+ brief: "<p>The VP of Medical Management wants two things: a <b>five-sentence summary</b> she can forward to the chief medical officer, and a one-screen <b>dashboard sketch</b> her team will check monthly. Constraint from her assistant: <i>“If it contains the words ‘self-join’ or ‘disposition segmentation,’ she will stop reading.”</i></p>",
+ todo: "<ol><li>Write the five sentences: the finding, the size of the problem, the recommended action, the expected return, and the honest caveat. Numbers in every sentence you can manage.</li><li>Sketch (boxes on paper are fine) a one-screen dashboard: what single number goes top-left? What trend? What breakdown? What would you deliberately leave out?</li></ol>",
+ model: "<p><b>The five sentences:</b> “Our 30-day readmission problem is concentrated in one place: heart-failure patients sent home without follow-up support, who return to the hospital 28% of the time - about 370 readmissions and $5.9M in spend last year. Patients with home-based follow-up are readmitted at half that rate, though some of that gap reflects which patients get chosen for support rather than the support itself. We recommend piloting a transitional-care program - a follow-up call plus a cardiology visit within 7 days - for this group, at roughly $250 per member. If it delivers the ~20% reduction published elsewhere, that's about 74 avoided hospitalizations and $850K in net savings annually. A randomized pilot this quarter would confirm the effect before we scale it plan-wide.”</p><p><b>The dashboard:</b> top-left, the single owned number - <i>heart-failure 30-day readmission rate, this month vs. last year</i> - big. Beside it: readmissions and dollars, year to date. Center: 13-month trend line with the pilot start date marked. Bottom: rate by condition (the table you built, as a bar chart), and pilot vs. non-pilot group tracking once it launches. <b>Deliberately excluded:</b> member-level lists (wrong audience), more than ~5 numbers (dashboards die of clutter), and anything the VP can't influence. A dashboard is an argument about what matters - that's why designing one is an analyst's job and not a formatting chore.</p>"
+ }
+ ]
+ },
+ next: {
+ courses: [
+ "<b>SQL + statistics first</b> - any path: DSI courses, CS 1100-level, or free (freeCodeCamp SQL, Khan Academy stats)",
+ "<b>Department of Biomedical Informatics (DBMI)</b> - one of the largest in the country; look at BIDS (Big Biomedical Data Science) offerings",
+ "<b>Biostatistics courses</b> - the methods behind every clinical analysis",
+ "MHS 2140 for the healthcare vocabulary that separates you from generic data candidates"
+ ],
+ campus: [
+ "<b>Vanderbilt Bioinformatics and Technology Club (VBIT)</b>",
+ "<b>VandyHacks</b> - build one health-data project at a hackathon; it becomes your interview story",
+ "<b>The Wond'ry</b> innovation programs - health-tech project experience",
+ "Data Science Institute workshops - free, open across schools"
+ ],
+ experiences: [
+ "Internships the wiki tracks: <b>Optum/UnitedHealth</b>, <b>CVS InnoTech</b>, <b>Flatiron Health</b>, <b>Komodo Health</b>, <b>Tempus</b>, <b>Epic (SWE/PM/TS)</b>, <b>Oracle Health</b>, <b>BCBS of Tennessee</b>",
+ "Nashville health-tech: <b>HCA ITG</b> data/IT analyst roles, <b>Embold Health</b>, <b>XSolis</b>, <b>Medalogix</b>",
+ "<b>Google Data Analytics Certificate</b> + <b>Tableau Desktop Specialist</b> - the two highest-ROI credentials for this track",
+ "Kaggle healthcare datasets & DrivenData competitions - portfolio pieces that double as resume lines"
+ ],
+ now: [
+ "Build one dashboard this month from public CMS or CDC data (the wiki's “Health Data Dashboard Project” walks through it) and put the link on your resume",
+ "Do 20 SQL exercises this week - sqlbolt.com or equivalent; the interview screen is usually a live query",
+ "Learn to read a claims row: ICD-10, CPT, NDC - one evening with CMS.gov covers the basics",
+ "Ask your advisor for the Epic and Optum interview-prep notes and any alumni in health-tech product roles"
+ ],
+ advisorNote: "The advising wiki lists 30+ data and health-tech opportunities - from Epic and Optum internships to Nashville startups most students have never heard of - plus alumni working in health-tech product, strategy, and analytics who take coffee chats. If the SQL task was fun rather than painful, tell your advisor: that reaction is the actual aptitude test."
+ }
+});
+
+</script>
+<script>
+/* Track: Research & Scientific Affairs (pharma, biotech, clinical research - non-clinical roles) */
+window.EXPLORER_TRACKS = window.EXPLORER_TRACKS || [];
+window.EXPLORER_TRACKS.push({
+ id: "research-scientific-affairs",
+ name: "Research & Scientific Affairs",
+ short: "Between the lab bench and the pharmacy shelf sits a decade of trials, filings, and evidence-making. Thousands of non-clinical careers live in that gap.",
+ color: "#3e7d78",
+ wash: "#e4efee",
+ glyph: "flask",
+ entryTitle: "Entry role: Clinical Research Coordinator",
+ tagline: "Getting a treatment from a promising molecule to an approved, covered, correctly-used medicine takes armies of people who aren't physicians or bench scientists: trial coordinators, regulatory specialists, health economists, medical writers, and scientific strategists. If you love the science but not the stethoscope - this is your wing of the industry.",
+ stats: [
+ { k: "Entry job titles", v: "Clinical Research Coordinator, Regulatory Associate" },
+ { k: "The core skill", v: "Reading evidence critically - and translating it" },
+ { k: "Signature deliverable", v: "The evidence story behind a medicine" },
+ { k: "Nashville advantage", v: "Sarah Cannon runs trials at global scale here" }
+ ],
+ field: {
+ what: [
+ "A drug that works in a lab is roughly a decade and a billion dollars away from a patient. That distance is crossed by <b>clinical trials</b> (designed, run, and monitored by research teams), <b>regulatory filings</b> (thousands of pages arguing safety and efficacy to the FDA), and - increasingly decisive - <b>evidence for payers</b>: proof that the medicine is worth covering at its price. Every step is a career, and almost none of them require an MD or a PhD to start.",
+ "Entry doors: a <b>Clinical Research Coordinator</b> runs trial operations at a site like VUMC or Sarah Cannon - recruiting patients, managing protocols and data. A <b>CRA</b> at a contract research organization (IQVIA, Medpace, PPD, ICON) monitors trial sites for quality. <b>Regulatory affairs</b> associates shepherd submissions. <b>HEOR</b> (health economics & outcomes research) analysts build the models that convince insurers. <b>Medical writers</b> turn data into manuscripts and regulatory documents. Two or three years in any of these, and the industry opens wide - including medical science liaison and medical affairs strategy roles for those who add an advanced degree later.",
+ "The temperament this track rewards is precision plus translation: you must read a clinical paper skeptically, respect the rules exactly (this is one of the most regulated activities on earth), and explain complex evidence honestly to different audiences - regulators, physicians, payers, patients. People who find that translation act satisfying, rather than tedious, tend to flourish."
+ ],
+ misconception: "That “working in pharma” means either pipetting in a lab or sales. The industry's largest non-clinical workforce sits between those poles - trial operations, regulatory, medical affairs, HEOR, medical writing - and it's the part that hires strong biology, neuroscience, MHS, and even English majors straight out of undergrad.",
+ titles: [
+ { title: "Clinical Research Coordinator (CRC)", desc: "Run trials at a site: patient visits, protocol compliance, data capture. VUMC and Sarah Cannon hire continuously; the classic 2-year launchpad." },
+ { title: "Clinical Research Associate (CRA) / CTA at a CRO", desc: "Monitor trial sites for IQVIA, Medpace, PPD, ICON - quality, compliance, and travel. Structured new-grad programs exist." },
+ { title: "Regulatory Affairs Associate", desc: "Assemble and manage FDA/EMA submissions; learn the rulebook that governs the entire industry." },
+ { title: "HEOR / Market Access Analyst", desc: "Model cost-effectiveness and budget impact; build the value dossiers payers demand. Quantitative, strategic, increasingly central." }
+ ],
+ day: [
+ { time: "8:30a", what: "Morning queue: three sites uploaded trial data overnight; two queries need chasing before the sponsor call." },
+ { time: "9:30a", what: "Screen two potential trial participants against the protocol's 14 eligibility criteria." },
+ { time: "11:00a", what: "Team review of the new heart-failure readout - what can and can't be said before approval." },
+ { time: "12:30p", what: "Journal-club lunch: a fellow coordinator presents a competitor trial's surprising results." },
+ { time: "2:00p", what: "Draft the plain-language study summary the IRB requires for participants." },
+ { time: "3:30p", what: "Call with the medical writer on the manuscript's results section - your data tables, her prose." },
+ { time: "5:00p", what: "Log site metrics; enrollment is two patients behind plan and the sponsor will ask why." }
+ ],
+ employers: {
+ nashville: ["Sarah Cannon Research Institute", "VUMC (clinical research)", "Vanderbilt-Ingram Cancer Center", "Cumberland Pharmaceuticals", "Aegis Sciences", "PathGroup"],
+ national: ["Pfizer", "Eli Lilly", "Merck", "Bristol Myers Squibb", "AstraZeneca", "Genentech / Roche", "Regeneron", "Moderna", "IQVIA", "PPD / Thermo Fisher", "Medpace", "ICON", "Parexel", "Syneos Health", "Trinity Life Sciences", "Lumanity"]
+ },
+ thrive: [
+ "You genuinely enjoy reading studies - methods sections included",
+ "Precision feels like craft, not bureaucracy (this industry runs on getting details exactly right)",
+ "You want your work connected to real treatments reaching real patients",
+ "You like translating: making rigorous science honest <i>and</i> understandable",
+ "You're considering grad school later (MPH, MS, PhD, PharmD) and want an on-ramp that keeps every option open"
+ ]
+ },
+ project: {
+ title: "Carry a heart-failure drug from trial readout to payer pitch",
+ role: "Scientific affairs intern, Solvane Therapeutics (a fictional mid-size biopharma company)",
+ setting: "Launch-readiness team, 6 months before an FDA decision",
+ duration: "≈ 2 hours",
+ premise: [
+ "Solvane's lead drug, <b>cardexolol</b>, just completed its Phase 3 trial in chronic heart failure. The readout is positive. Now the company must do four things at once: understand exactly what the evidence shows, stay inside strict pre-approval communication rules, build the economic case insurers will demand, and translate the science honestly for the committees who decide coverage.",
+ "As the intern on the scientific affairs team, you'll touch all four - the same arc a real launch team walks, compressed into four tasks."
+ ],
+ fictionNote: "Solvane, cardexolol, and the MERIDIAN-HF trial are entirely fictional, with simplified numbers. The task sequence - trial interpretation, regulatory guardrails, budget-impact modeling, evidence translation - is the authentic core of medical affairs, HEOR, and market access work at companies like Pfizer, Lilly, and the consultancies that serve them.",
+ tasks: [
+ {
+ title: "Read the trial like a scientist, not a press release",
+ minutes: 30,
+ skills: ["Clinical trial literacy", "Absolute vs. relative risk", "NNT"],
+ brief: "<p>The press release says <i>“cardexolol reduced cardiovascular events by 23%.”</i> Your job is to know what that actually means - because physicians, regulators, and payers will each read it differently, and the difference between <b>relative</b> and <b>absolute</b> risk reduction is the most common way trial results mislead.</p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>MERIDIAN-HF: Phase 3, randomized, double-blind, 24-month follow-up</caption><thead><tr><th>Outcome</th><th class=\"num\">Cardexolol (n=2,400)</th><th class=\"num\">Placebo (n=2,400)</th></tr></thead><tbody><tr><td>Primary: CV death or HF hospitalization</td><td class=\"num\">14.2%</td><td class=\"num\">18.5%</td></tr><tr><td>HF hospitalization alone</td><td class=\"num\">9.0%</td><td class=\"num\">12.0%</td></tr><tr><td>Symptomatic hypotension (adverse event)</td><td class=\"num\">6.1%</td><td class=\"num\">3.0%</td></tr><tr><td>Discontinued due to side effects</td><td class=\"num\">4.8%</td><td class=\"num\">3.9%</td></tr></tbody></table></div>",
+ todo: "<ol><li>Compute the primary endpoint's <b>relative risk reduction</b> (RRR) and <b>absolute risk reduction</b> (ARR). Confirm where the press release's “23%” came from.</li><li>Compute the <b>number needed to treat</b> (NNT = 1 ÷ ARR): how many patients must take cardexolol for two years to prevent one event?</li><li>Do the same logic for harm: the <b>number needed to harm</b> (NNH) for symptomatic hypotension.</li><li>One sentence: why might a payer be less impressed than the press release wants them to be?</li></ol>",
+ model: "<p><b>RRR:</b> (18.5 − 14.2) ÷ 18.5 ≈ <b>23%</b> - that's the headline number. <b>ARR:</b> 18.5% − 14.2% = <b>4.3 percentage points</b>. Same data, much humbler sound.</p><p><b>NNT:</b> 1 ÷ 0.043 ≈ <b>23</b> - treat 23 patients for two years to prevent one death-or-hospitalization. For context, that's a genuinely respectable NNT for a chronic cardiovascular drug.</p><p><b>NNH:</b> hypotension risk rises 6.1% − 3.0% = 3.1 points → 1 ÷ 0.031 ≈ <b>32</b>. So: prevent one major event per 23 patients, cause one significant side effect per 32. Benefit and harm are the same <i>kind</i> of arithmetic - always compute both.</p><p><b>The payer's view:</b> payers buy absolute risk reduction, because they pay for all 23 patients to prevent the one event - so the cost of preventing one event is 23 × 2 years × the drug's price. That single insight is why HEOR exists as a profession, and it sets up Task 3.</p>"
+ },
+ {
+ title: "Learn the rules: what you may say, and when",
+ minutes: 25,
+ skills: ["Drug development pathway", "Regulatory basics", "Compliance judgment"],
+ brief: "<p>A district sales manager emails your team: <i>“These results are incredible - can my reps start sharing the MERIDIAN-HF abstract with cardiologists now?”</i> Cardexolol is <b>not yet approved</b>. Answering requires knowing both the development pathway and one of the industry's brightest legal lines: companies may not promote a drug before approval (or beyond its approved label after).</p>",
+ data: "<p>The pathway, scrambled - put it in order first: &nbsp;<i>FDA review of the NDA/BLA · Phase 1 (safety, small group) · Discovery & preclinical (lab and animal) · Phase 3 (large efficacy trials) · Post-market surveillance & Phase 4 · Phase 2 (dose-finding, early efficacy) · NDA/BLA submission</i></p>",
+ todo: "<ol><li>Write the seven stages in order, with a phrase on what each is for. Where is cardexolol right now?</li><li>Draft a 3-4 sentence reply to the sales manager: what can't happen, why, and what the <i>compliant</i> path for the science is.</li><li>Name the function whose whole job is walking this line between science and promotion.</li></ol>",
+ model: "<p><b>The pathway:</b> Discovery & preclinical → Phase 1 (safety, dozens of subjects) → Phase 2 (dosing and early efficacy, hundreds) → Phase 3 (definitive efficacy vs. comparator, thousands) → <b>NDA/BLA submission</b> (the full evidence dossier) → FDA review (≈10 months standard) → Post-market surveillance/Phase 4 (safety at population scale). Cardexolol sits between submission and decision.</p><p><b>The reply:</b> “No - reps cannot proactively share trial results for an unapproved product; that's pre-approval promotion, which FDA prohibits, and violations carry warning letters, fines, and launch-delaying scrutiny. What <i>is</i> permitted: the science can be presented at medical congresses and published in journals, and if a physician asks us an unsolicited question, Medical Information can respond with the data. Once the label is approved, marketing can promote - within exactly what the label says. Until then, the evidence travels through scientific channels, not sales calls.”</p><p><b>The function:</b> <b>Medical Affairs</b> - scientific experts (MSLs, medical information, publications teams) who engage clinicians on the evidence, firewalled from the commercial organization. The fact that this firewall employs tens of thousands of people tells you how seriously the industry takes the line - and it's a genuine career path for scientifically-minded non-clinicians.</p>"
+ },
+ {
+ title: "Build the payer's budget-impact model",
+ minutes: 30,
+ skills: ["HEOR", "Budget-impact modeling", "Value framing"],
+ brief: "<p>An insurer's pharmacy team will ask one question at launch: <i>“What does covering cardexolol do to our budget?”</i> HEOR analysts answer with a <b>budget-impact model</b> - simple multiplication, chained honestly. The list price will be <b>$6,000/patient/year</b>.</p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>Model inputs for a hypothetical 1,000,000-member health plan</caption><thead><tr><th>Input</th><th class=\"num\">Value</th></tr></thead><tbody><tr><td>Members with eligible heart failure</td><td class=\"num\">0.8% = 8,000</td></tr><tr><td>Expected uptake in year 1</td><td class=\"num\">10% = 800 patients</td></tr><tr><td>Drug cost</td><td class=\"num\">$6,000 / patient / yr</td></tr><tr><td>HF hospitalization rate without drug</td><td class=\"num\">12 per 100 patients / yr</td></tr><tr><td>Relative reduction in HF hospitalization (trial)</td><td class=\"num\">25%</td></tr><tr><td>Cost per HF hospitalization</td><td class=\"num\">$18,000</td></tr></tbody></table></div>",
+ todo: "<ol><li>Compute year-1 drug spend, hospitalizations avoided, and the offsetting savings.</li><li>Net budget impact, total and <b>per member per month</b> (PMPM) - the unit payers think in.</li><li>The model shows the drug does <i>not</i> pay for itself. Write two honest sentences a market-access team could still say to the payer - without pretending otherwise.</li></ol>",
+ model: "<p><b>Drug spend:</b> 800 × $6,000 = <b>$4.8M</b>. <b>Avoided hospitalizations:</b> 800 × 0.12 × 25% = <b>24/year</b>, saving 24 × $18,000 = <b>$432K</b>. <b>Net impact:</b> ≈ <b>$4.37M/year</b>, or $4.37M ÷ 1M members ÷ 12 ≈ <b>$0.36 PMPM</b>.</p><p><b>The honest value story:</b> “Cardexolol adds about 36 cents per member per month in year one, and roughly 10% of its cost is directly offset by avoided hospitalizations. The remaining cost buys measurable health: fewer cardiovascular deaths and hospital stays in a population with few remaining options - value we quantify in the cost-per-outcome analyses accompanying this model.” Most new drugs don't “save money”; they <i>buy health</i>, and the real negotiation is about the price of that health (formally: cost-effectiveness analysis, measured in cost per quality-adjusted life year). Analysts who present the honest number plus the honest frame keep their credibility - and credibility is the entire currency of scientific affairs.</p><p><b>Bonus instinct:</b> notice how sensitive the model is to <i>which</i> 800 patients start therapy - target the highest-risk patients (say, hospitalized in the past year, with double the baseline event rate) and offsets double while drug cost stays flat. “Right patient, right drug” is a financial argument, not just a clinical one.</p>"
+ },
+ {
+ title: "Translate the evidence for the coverage committee",
+ minutes: 30,
+ skills: ["Medical writing", "Fair balance", "Audience translation"],
+ brief: "<p>The payer's <b>P&T committee</b> (pharmacy & therapeutics - the pharmacists and physicians who decide what gets covered) wants a <b>one-paragraph evidence summary</b>, ~150 words, plain language. The rules of good medical writing: absolute numbers alongside relative ones, harms beside benefits, the studied population named precisely, and zero adjectives doing the work numbers should do. “Fair balance” isn't just an FDA rule - it's what keeps expert readers trusting you.</p>",
+ todo: "<ol><li>Write the ~150-word summary of MERIDIAN-HF for the committee, using your Task 1 numbers. Include: who was studied, the primary result in relative <i>and</i> absolute terms (with NNT), the main harm, and what remains unknown.</li><li>Then the discipline check: circle every adjective in your draft. Delete any that a number could replace.</li></ol>",
+ model: "<p><b>A version that would pass review:</b></p><p><i>“MERIDIAN-HF randomized 4,800 adults with chronic heart failure to cardexolol or placebo, added to standard therapy, for 24 months. The primary composite endpoint - cardiovascular death or heart-failure hospitalization - occurred in 14.2% of cardexolol patients versus 18.5% on placebo: a 23% relative and 4.3-percentage-point absolute reduction, meaning approximately 23 patients treated for two years to prevent one event. Heart-failure hospitalizations alone fell from 12.0% to 9.0%. The principal adverse effect was symptomatic hypotension (6.1% vs. 3.0%; one additional case per 32 patients treated); discontinuation rates were similar between arms. Effects beyond 24 months, and outcomes in patients over 80 or with severe renal impairment - excluded from enrollment - remain uncharacterized.”</i></p><p><b>What makes it professional:</b> the population is specified, every claim carries its number in both relative and absolute form, the harm gets the same arithmetic dignity as the benefit, and the limitations are volunteered rather than extracted. Compare with your draft: the most common miss is omitting what the trial <i>can't</i> show - and that omission is precisely what expert committees are trained to notice.</p>"
+ }
+ ]
+ },
+ next: {
+ courses: [
+ "<b>Biostatistics and epidemiology coursework</b> - the grammar of every trial you'll ever read",
+ "<b>Pharmacology courses</b> - mechanism fluency that separates you in interviews",
+ "<b>PUBH 5525 (Health Economics)</b> / decision analysis - the HEOR toolkit",
+ "MHS courses on the U.S. system - market access is impossible to understand without payer basics"
+ ],
+ campus: [
+ "<b>Faculty research assistant roles</b> - the wiki tracks openings; any wet-lab or clinical research exposure counts",
+ "<b>VUSRP</b> (Vanderbilt Undergraduate Summer Research Program) and <b>Immersion Vanderbilt</b> projects in clinical research",
+ "<b>Nucleate Vanderbilt</b> - the biotech-careers community on campus",
+ "ISPOR, DIA, and ACRP student memberships - cheap, and they signal seriousness"
+ ],
+ experiences: [
+ "<b>VUMC Clinical Research Coordinator / RA roles</b> - hired continuously; the classic first job in this field",
+ "<b>Sarah Cannon Research Institute</b> clinical research roles - oncology trials at global scale, in Nashville",
+ "Pharma summer internships the wiki tracks: <b>Pfizer Futures, Lilly, Merck, BMS, AstraZeneca, Regeneron, Moderna, Genentech</b>",
+ "CRO new-grad programs: <b>Medpace CRA/CTA</b>, <b>ICON</b>, <b>PPD/Thermo Fisher</b>, <b>IQVIA</b>; life-science strategy: <b>Trinity, Putnam, Clearview, Health Advances</b>"
+ ],
+ now: [
+ "Read one real NEJM or JAMA trial abstract weekly and compute the ARR and NNT yourself - ten minutes that compounds into an interview superpower",
+ "Take the free NIH/CITI human-subjects research training - many CRC postings list it, few students have it",
+ "Do a free Forage life-sciences simulation to see the commercial side",
+ "Ask your advisor about VUMC and Sarah Cannon openings and which alumni went pharma - the CRC path is Nashville's most reliable entry"
+ ],
+ advisorNote: "The wiki tracks 25+ research-track opportunities - VUMC and Sarah Cannon coordinator roles, every major pharma summer internship, CRO new-grad programs, and NIH post-bac fellowships - plus faculty and lab pages if you want research experience first. If you're weighing this against med school, say so: your advisor prepares that exact conversation constantly."
+ }
+});
+
+</script>
+<script>
+/* Track: Health Policy & Population Health */
+window.EXPLORER_TRACKS = window.EXPLORER_TRACKS || [];
+window.EXPLORER_TRACKS.push({
+ id: "health-policy-population-health",
+ name: "Health Policy & Population Health",
+ short: "One rule change in Medicaid moves more health outcomes than a hospital full of clinicians. Policy is healthcare's biggest lever - someone has to do the analysis behind it.",
+ color: "#a3543f",
+ wash: "#f4e8e4",
+ glyph: "capitol",
+ entryTitle: "Entry role: Policy Research Assistant",
+ tagline: "Who gets covered, what gets paid for, which programs get funded - those decisions are made in legislatures, agencies, and think tanks, and they're made better or worse by the quality of analysis behind them. Policy analysts do that analysis; population-health professionals turn it into programs that reach whole communities.",
+ stats: [
+ { k: "Entry job titles", v: "Research Assistant, Policy Analyst, Program Coordinator" },
+ { k: "The core skill", v: "Clear writing under evidence discipline" },
+ { k: "Signature deliverable", v: "The brief a decision-maker actually reads" },
+ { k: "Nashville advantage", v: "A state capital with a health-policy scene" }
+ ],
+ field: {
+ what: [
+ "Medicaid covers roughly one in five Americans. Medicare sets the prices half the industry lives on. A single coverage rule - who qualifies, for how long, for what services - can change more lives than any clinical innovation of the same year. Health policy careers put you inside those decisions: analyzing what a proposed rule would do, briefing the people who vote on it, or running the programs it creates.",
+ "The work happens in four kinds of buildings. <b>Think tanks and research shops</b> (KFF, Brookings, Urban Institute, Mathematica - and in Nashville, the Sycamore Institute) produce the analyses everyone else cites. <b>Government</b> (CMS, CDC, state Medicaid agencies like TennCare, city health departments) writes and runs the programs. <b>Advocacy organizations</b> (like the Tennessee Justice Center) push for specific changes. <b>Consultancies</b> (Avalere, Manatt Health, HMA) translate policy for companies that must navigate it. Entry titles differ; the daily craft is the same: read rigorously, analyze honestly, write clearly, count carefully.",
+ "Population health is the same discipline pointed at delivery: designing and evaluating programs - maternal health, overdose prevention, chronic-disease management - that improve outcomes for entire communities rather than one patient at a time. It's where epidemiology, program management, and health equity work meet, and it's hiring fast in health systems and health plans, not just public agencies."
+ ],
+ misconception: "That policy work is politics - arguing positions all day. Most of it is closer to careful journalism plus applied economics: what does the evidence say, what would this option cost, who gains, who loses, and can it be implemented? Credible analysts are valued precisely because both parties can trust their numbers.",
+ titles: [
+ { title: "Research Assistant / Policy Analyst (think tank)", desc: "Literature reviews, data analysis, issue briefs at KFF, Urban, Mathematica, Sycamore. Writing samples matter more than GPA." },
+ { title: "State agency analyst (TennCare, Dept. of Health)", desc: "Inside the programs themselves: eligibility policy, budget analysis, program evaluation. Underrated access to real decisions, early." },
+ { title: "Legislative aide - health portfolio", desc: "Staff a member of Congress or a state legislator on health issues: briefings, constituent casework, bill analysis. The classic D.C. on-ramp." },
+ { title: "Population health / program coordinator", desc: "Run community health programs at health systems, plans, and nonprofits - maternal health, food access, care coordination. People-facing, measurable." }
+ ],
+ day: [
+ { time: "8:30a", what: "Skim the morning health-policy newsletters; a federal rule dropped that changes your state estimate." },
+ { time: "9:00a", what: "Pull hospital discharge data to update the maternal-outcomes analysis for the brief." },
+ { time: "10:30a", what: "Team review: your draft's cost table survives, but two adjectives get cut. Evidence only." },
+ { time: "12:00p", what: "Brown-bag with a visiting TennCare official on how the agency actually implements eligibility changes." },
+ { time: "1:30p", what: "Call with an advocacy coalition - they want your numbers for legislative testimony next week." },
+ { time: "3:00p", what: "Draft the two-page version for legislators and the 800-word public version of the same analysis." },
+ { time: "5:00p", what: "Log the day's requests; when the committee schedule heats up, so do the deadlines." }
+ ],
+ employers: {
+ nashville: ["The Sycamore Institute", "TennCare (TN Medicaid)", "Tennessee Department of Health", "Tennessee Justice Center", "Tennessee Hospital Association", "Metro Public Health Dept.", "NashvilleHealth", "Nashville CARES", "Siloam Health"],
+ national: ["KFF", "Brookings Institution", "Urban Institute", "Mathematica", "The Commonwealth Fund", "RAND", "Avalere Health", "Manatt Health", "Health Management Associates", "ATI Advisory", "CMS", "CDC", "HHS", "MedPAC", "Center on Budget and Policy Priorities"]
+ },
+ thrive: [
+ "You care about the <b>system</b> - coverage, fairness, incentives - more than any single transaction in it",
+ "Writing is your weapon: you can make a complicated thing clear in a page",
+ "You can hold a position lightly: the evidence gets the final vote",
+ "You're patient with process - policy change is a long game with occasional lightning",
+ "Questions of equity - who gets left out and why - genuinely move you"
+ ]
+ },
+ project: {
+ title: "Should the state extend postpartum Medicaid coverage?",
+ role: "Policy intern, the Cumberland Center for Health Policy (a fictional nonpartisan state think tank)",
+ setting: "Legislative session opens in 8 weeks; a senator has requested analysis",
+ duration: "≈ 2 hours",
+ premise: [
+ "In your state, Medicaid pays for roughly half of all births - but a new mother's coverage ends <b>60 days after delivery</b>, even though a large share of maternal health crises (cardiac complications, hemorrhage-related conditions, severe depression, overdose) occur later in the first year. A state senator has asked your center for a nonpartisan analysis: <b>what would extending postpartum coverage to 12 months cost, and what would it buy?</b>",
+ "You'll do the four things a real policy shop does: map the terrain, build the numbers, weigh the options honestly, and write the brief that gets read in the eight minutes between committee hearings."
+ ],
+ fictionNote: "The Cumberland Center is fictional and the numbers are simplified for teaching - but the policy is real: Tennessee extended TennCare postpartum coverage to 12 months in 2022, and most states have now done the same under a federal option. This case rewinds the clock so you can do the analysis that real analysts (including Nashville's Sycamore Institute) did when it was still an open question.",
+ tasks: [
+ {
+ title: "Map the terrain before you argue anything",
+ minutes: 25,
+ skills: ["Medicaid mechanics", "Stakeholder mapping", "Policy levers"],
+ brief: "<p>Amateurs start with opinions; analysts start with mechanics. Medicaid is <b>jointly funded</b> - the federal government pays a matching share of every state dollar (in most Southern states, roughly 65%) - and states change eligibility through defined channels: state legislation and budget, a <b>state plan amendment</b> (SPA) to the federal government, or a federal waiver. Nothing moves unless a coalition of interested parties lets it move.</p>",
+ todo: "<ol><li>List the stakeholders who care about this decision - aim for at least seven - and mark each: likely supporter, likely opponent, or persuadable-with-conditions.</li><li>For your three most important stakeholders, write one sentence on what each actually wants (not their slogan - their interest).</li><li>Note the two mechanical facts from the brief above that will dominate the analysis. </li></ol>",
+ model: "<p><b>The map (one version):</b> new mothers and families (supporters; the affected population) · hospitals and OB providers (supporters - uncovered patients become uncompensated care) · the state Medicaid agency (persuadable - cares about administrative workload and budget predictability) · the governor's budget office (persuadable - cares about the state-dollar cost) · fiscal conservatives in the legislature (skeptical - recurring spending) · maternal-health and faith coalitions (supporters - infant and maternal wellbeing crosses party lines) · health plans administering Medicaid (supporters - more covered months) · the hospital association (supporter, and politically potent).</p><p><b>The interests behind the top three:</b> Budget office: “Tell me the <i>state share</i> after federal match, and whether it grows.” Hospitals: “Every uninsured postpartum ER visit is our loss - coverage is revenue.” Skeptical legislators: “Give me a defensible number and a reason this isn't open-ended growth.”</p><p><b>The two dominating facts:</b> the federal match means every state dollar buys ~three dollars of coverage - the state's true cost is ~35% of the sticker price; and the eligible population is bounded (women already enrolled at delivery), which caps the fiscal exposure. Real analysis is knowing which two facts, out of fifty, everything else hangs on.</p>"
+ },
+ {
+ title: "Build the numbers a skeptic can't wave away",
+ minutes: 30,
+ skills: ["Fiscal estimation", "Assumption chains", "Data honesty"],
+ brief: "<p>The senator's staff wants “the number” - annual cost of a 12-month extension. There is no such number lying in a database; you build it from a chain of stated assumptions, each one challengeable, none hidden.</p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>What you can pull from public sources (simplified)</caption><thead><tr><th>Input</th><th class=\"num\">Value</th></tr></thead><tbody><tr><td>Births in the state per year</td><td class=\"num\">80,000</td></tr><tr><td>Share covered by Medicaid at delivery</td><td class=\"num\">50%</td></tr><tr><td>Share who would lose coverage at 60 days</td><td class=\"num\">55%</td></tr><tr><td>Of those, share expected to stay enrolled if extended</td><td class=\"num\">60%</td></tr><tr><td>Average Medicaid cost per adult member per month</td><td class=\"num\">$420</td></tr><tr><td>Additional covered months (60 days → 12 months)</td><td class=\"num\">10</td></tr><tr><td>Federal matching rate (FMAP)</td><td class=\"num\">65%</td></tr><tr><td>Share of pregnancy-related deaths occurring 43-365 days postpartum</td><td class=\"num\">~30%</td></tr></tbody></table></div>",
+ todo: "<ol><li>Chain it: how many women gain coverage, how many member-months is that, and what's the <b>gross annual cost</b>?</li><li>Split gross cost into <b>federal share</b> and <b>state share</b> - the number the budget office actually debates.</li><li>Write the health-impact sentence: using the mortality-timing fact, what does the current 60-day cutoff mean, stated carefully (no causal overclaim)?</li></ol>",
+ hint: "Women affected = 80,000 × 50% × 55%. Not all of them stay enrolled - apply the 60% take-up before multiplying months and dollars.",
+ model: "<p><b>The chain:</b> 80,000 births × 50% Medicaid = 40,000 covered deliveries; × 55% losing coverage at day 60 = <b>22,000 women affected</b>; × 60% expected enrollment = 13,200 enrollees × 10 months = <b>132,000 member-months</b> × $420 ≈ <b>$55M gross per year</b>.</p><p><b>The split:</b> federal share 65% ≈ $36M; <b>state share ≈ $19M/year</b>. That's the fight: $19M of recurring state money - real, but small against a multi-billion-dollar Medicaid budget, and it purchases $55M of coverage.</p><p><b>The health sentence:</b> “About 30% of pregnancy-related deaths occur between 43 days and one year postpartum - squarely in the window where 22,000 women a year currently lose coverage; while coverage alone doesn't guarantee prevention, it is the precondition for the follow-up care, mental-health treatment, and chronic-condition management that clinical reviews consistently identify as missed opportunities.” Note the discipline: the mortality-timing fact is stated, the causal claim is <i>not</i> overstated, and every number in the chain is visible for a skeptic to attack. An estimate someone can argue with is credible; an estimate that hides its assumptions is not.</p>"
+ },
+ {
+ title: "Weigh the options like a nonpartisan shop",
+ minutes: 30,
+ skills: ["Options analysis", "Criteria-based evaluation", "Intellectual honesty"],
+ brief: "<p>Nonpartisan analysis rarely says “do X.” It puts 2-4 options against explicit criteria and lets the decision-maker see the trade. Your center's standard criteria: <b>state cost</b>, <b>health impact</b>, <b>administrative feasibility</b>, and <b>political durability</b> (will it survive the next budget cycle?).</p>",
+ todo: "<ol><li>Build the options grid: <b>(A)</b> status quo, <b>(B)</b> extend to 6 months, <b>(C)</b> extend to 12 months. Score each against the four criteria in a phrase per cell - no invented precision, honest phrases.</li><li>Add the strongest <i>good-faith argument</i> for each option, including the status quo. (If you can't state the other side's best case, you don't understand the issue yet.)</li><li>One sentence: which option does the evidence favor, and what's the biggest genuine uncertainty in your own analysis?</li></ol>",
+ model: "<p><b>The grid, in prose:</b> <b>(A) Status quo</b> - $0 new cost; leaves the 60-day cliff in the highest-risk window; no admin change; durable only until the next maternal-mortality report makes it untenable. Best case for A: recurring dollars are scarce and other maternal-health investments (home visiting, provider access) might buy more health per dollar. <b>(B) 6 months</b> - roughly half the state cost (~$10M); covers some of the risk window but cuts off before late-postpartum mental-health and cardiac risks resolve; <i>worse feasibility than it looks</i> - a nonstandard duration means custom eligibility systems, and the federal option is built for 12 months. Best case for B: a compromise that moves the cliff at lower cost. <b>(C) 12 months</b> - ~$19M state share; covers the full risk window; administratively the <i>simplest</i> extension because federal machinery expects it; most durable - hard to repeal a benefit mothers already use. Best case for C: the full fix at three-to-one federal leverage.</p><p><b>The verdict sentence:</b> “The evidence favors C: option B saves half the money but forfeits both the late-window health impact and the administrative simplicity, making it worse per dollar than it appears - while the biggest genuine uncertainty in our own numbers is the 60% enrollment-retention assumption, which could move the state cost by several million in either direction.” Notice the shape: the recommendation, the honest reason the compromise fails, and a self-disclosed weakness. That last move is what makes a shop citable by both parties - and it's the hardest habit for new analysts to learn.</p>"
+ },
+ {
+ title: "Write the brief that survives the hallway",
+ minutes: 35,
+ skills: ["Policy writing", "Plain language", "Structure"],
+ brief: "<p>Legislators read policy briefs standing in hallways. The form is strict: a title that states the issue, a 3-sentence summary box, then <b>Issue → Background → Analysis → Options → Considerations</b>, one page, plain language, every number sourced. Your center's style rule: <i>a smart reader with no health background should never have to reread a sentence.</i></p>",
+ todo: "<ol><li>Write the <b>summary box</b>: three sentences - the problem, the central number, the decision before the legislature.</li><li>Write the <b>Options</b> section from your Task 3 grid - 2-3 lines per option, neutral voice.</li><li>Write the closing <b>Considerations</b> paragraph: implementation timing, the key uncertainty, and what to watch in other states.</li><li>Read the whole thing aloud; rewrite any sentence you stumbled on. (This is a real editing technique used in every policy shop.)</li></ol>",
+ model: "<p><b>Summary box:</b> “Medicaid pays for half of the state's 80,000 annual births, but a mother's coverage ends 60 days after delivery - while roughly 30% of pregnancy-related deaths occur between 43 days and one year postpartum. Extending coverage to 12 months would reach about 22,000 women a year at an estimated state cost of $19 million after federal match ($55 million gross). The legislature faces a choice among the status quo, a 6-month extension, and the 12-month extension most states are now adopting.”</p><p><b>Options (excerpt):</b> “<b>Option C - extend to 12 months.</b> Covers the full first-year risk window at an estimated $19M annual state share. Aligns with the standing federal option, making implementation administratively straightforward. Twenty-plus states have adopted this approach; early evaluations show reduced coverage interruption, with mortality effects not yet measurable.”</p><p><b>Considerations:</b> “Implementation would begin with the next plan year; the estimate's largest uncertainty is retention (we assume 60% of eligible women remain enrolled - each ten-point change moves the state share about $3M). Neighboring states' early experience will provide sharper enrollment data within a year, and any evaluation should track postpartum emergency visits and behavioral-health utilization, where effects should appear first.”</p><p><b>The craft to notice:</b> no adjectives are doing argumentative work, the opposition's concern (recurring cost) is treated as legitimate, and the numbers from Task 2 appear with their assumptions attached. Policy writing is trust engineering - the brief is judged by whether the <i>losing</i> side still cites your numbers.</p>"
+ }
+ ]
+ },
+ next: {
+ courses: [
+ "<b>MHS major/minor</b> - the natural home: health policy, health equity, U.S. system courses",
+ "<b>MHS 2140 (Health Care in the U.S.)</b> and <b>PUBH 5520 (Intro to Health Policy)</b>",
+ "<b>Economics + statistics</b> - quantitative policy analysts are the scarce kind; Stata or R coursework pays off",
+ "Political science courses on American institutions - you can't analyze what you can't mechanically explain"
+ ],
+ campus: [
+ "<b>Public Health Student Association</b>, <b>Student Advocates for Public Health</b>, <b>Vanderbilt Science Policy Group</b>",
+ "<b>Global health case competitions</b> (Emory Morningside; Vanderbilt's own) - policy analysis under time pressure",
+ "<b>Vanderbilt Institute for Global Health</b> courses and undergraduate opportunities",
+ "Write for a campus publication on health issues - clips are the currency of policy hiring"
+ ],
+ experiences: [
+ "Nashville: <b>The Sycamore Institute internships</b>, <b>Tennessee Justice Center health policy internships</b>, <b>TN Dept. of Health internships & fellowships</b>, <b>Metro Public Health Department</b>",
+ "D.C. pipeline: <b>congressional internships</b> (health committees), <b>KFF, Brookings, Urban Institute, Mathematica, CBPP internships</b> - all tracked in the wiki",
+ "Federal: <b>CDC Pathways / Public Health Associate Program (PHAP)</b>, <b>HHS/CMS Pathways internships</b>, <b>ORISE fellowships</b>",
+ "Population health on campus: <b>Health Equity Research Project</b>, community organizations (Siloam Health, Neighborhood Health volunteer roles)"
+ ],
+ now: [
+ "Read three KFF issue briefs and reverse-engineer their structure - that structure is the job",
+ "Write one practice policy brief (this project's Task 4 counts) and have your advisor or a professor tear it apart",
+ "Follow the state legislature's health committee for one session cycle; Tennessee's is a masterclass happening two miles from campus",
+ "Sign up for one health-policy newsletter (KFF Health News, or the Sycamore Institute's Tennessee-focused one) and actually read it"
+ ],
+ advisorNote: "The wiki tracks 30+ policy and public-health opportunities - from the Sycamore Institute and Tennessee Justice Center here in Nashville to KFF, Brookings, CDC PHAP, and congressional internships - plus which ones want writing samples (most). Policy hiring runs on clips and networks: ask your advisor to review your first writing sample and to introduce you to alumni in Nashville's health-policy scene."
+ }
+});
+
+</script>
+<script>
+/* ============================================================
+   App - hash router, quiz engine, progress in localStorage.
+   ============================================================ */
+(function () {
+  var TRACKS = window.EXPLORER_TRACKS || [];
+  var QUIZ = window.EXPLORER_QUIZ || [];
+  var app = document.getElementById('app');
+  var PKEY = 'vhce-progress-v1';
+
+  /* ---------- glyphs: one small line drawing per track ---------- */
+  var GLYPHS = {
+    compass: '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11z"/></svg>',
+    ledger:  '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19 9 12l4 3 7-9"/><path d="M16 6h4v4"/></svg>',
+    flow:    '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="6" height="6" rx="1"/><rect x="15" y="14" width="6" height="6" rx="1"/><path d="M9 7h5a2 2 0 0 1 2 2v5"/><path d="m14.6 11.6 1.4 2.4 2.4-1.4"/></svg>',
+    grid:    '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="6" rx="7" ry="2.6"/><path d="M5 6v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6"/><path d="M5 12v6c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6v-6"/></svg>',
+    flask:   '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3h4M11 3v6l-5.2 8.7A2 2 0 0 0 7.5 21h9a2 2 0 0 0 1.7-3.3L13 9V3"/><path d="M8.5 15h7"/></svg>',
+    capitol: '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21h16M5 21v-8m14 8v-8M3 13h18l-9-6z"/><path d="M9 21v-5m3 5v-5m3 5v-5M12 7V4l2.5 1L12 6"/></svg>'
+  };
+
+  /* ---------- progress ---------- */
+  function loadProgress() {
+    try { return JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) { return {}; }
+  }
+  function saveProgress(p) {
+    try { localStorage.setItem(PKEY, JSON.stringify(p)); } catch (e) {}
+  }
+  function taskDone(trackId, i) {
+    var p = loadProgress();
+    return !!(p[trackId] && p[trackId][i]);
+  }
+  function setTaskDone(trackId, i, val) {
+    var p = loadProgress();
+    p[trackId] = p[trackId] || {};
+    if (val) p[trackId][i] = true; else delete p[trackId][i];
+    saveProgress(p);
+  }
+  function trackProgress(t) {
+    var n = 0;
+    for (var i = 0; i < t.project.tasks.length; i++) if (taskDone(t.id, i)) n++;
+    return { done: n, total: t.project.tasks.length };
+  }
+
+  /* ---------- tiny helpers ---------- */
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function el(html) {
+    var t = document.createElement('template');
+    t.innerHTML = html.trim();
+    return t.content.firstElementChild;
+  }
+  function chips(arr, cls) {
+    return arr.map(function (c) { return '<span class="chip ' + (cls || '') + '">' + esc(c) + '</span>'; }).join('');
+  }
+
+  /* ---------- home view ---------- */
+  function renderHome() {
+    document.title = 'Vanderbilt Non-Clinical Healthcare Explorer';
+    var cards = TRACKS.map(function (t) {
+      var pr = trackProgress(t);
+      var donePill = pr.done === pr.total ? '<span class="done-pill">Project complete</span>'
+        : (pr.done > 0 ? '<span class="done-pill">' + pr.done + '/' + pr.total + ' tasks</span>' : '');
+      return '<a class="track-card" href="#/track/' + t.id + '" style="--track:' + t.color + ';--track-wash:' + t.wash + '">' +
+        donePill +
+        '<span class="glyph" aria-hidden="true">' + GLYPHS[t.glyph] + '</span>' +
+        '<h3>' + esc(t.name) + '</h3>' +
+        '<span class="tag">' + esc(t.short) + '</span>' +
+        '<span class="meta"><span>' + t.project.tasks.length + '-task project</span><span>&asymp; ' + esc(t.project.duration) + '</span><span>' + esc(t.entryTitle) + '</span></span>' +
+        '</a>';
+    }).join('');
+
+    app.innerHTML =
+      '<div class="hero">' +
+        '<p class="hero-eyebrow">For Vanderbilt students &middot; No white coat required</p>' +
+        '<h1>Try six healthcare careers before you apply to one.</h1>' +
+        '<p class="lede">Healthcare is a fifth of the U.S. economy, and most of the people who run it never touch a patient. This explorer lets you test-drive the non-clinical side: each track below opens with what the work actually is, then hands you a realistic mini-project with real data, real deliverables, and sample answers to compare against.</p>' +
+        '<p class="fineprint">Each project takes roughly 2-3 hours. You need nothing but a notebook or a blank doc - and your progress saves in this browser.</p>' +
+      '</div>' +
+      '<div id="quizMount"></div>' +
+      '<div class="grid-head"><h2>The six tracks</h2><span class="k">Ordered by nothing - start where you\'re curious</span></div>' +
+      '<div class="track-grid">' + cards + '</div>' +
+      '<footer class="colophon">Built from the Vanderbilt career advising wiki: employer names, opportunity lists, courses, and student organizations referenced here are real and curated by your career advisor. Project scenarios use fictional client names and simplified data - they are teaching cases, not descriptions of real organizations. Questions, or want an introduction to an employer listed here? Ask your career advisor.</footer>';
+
+    renderQuiz(document.getElementById('quizMount'));
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- quiz ---------- */
+  var quizState = null; // {i, scores}
+  function renderQuiz(mount) {
+    if (!QUIZ.length) return;
+    function paint() {
+      var inner;
+      if (!quizState) {
+        inner = '<div class="quiz-head"><h2>Not sure where to start?</h2><span class="k">' + QUIZ.length + ' questions &middot; 2 minutes</span></div>' +
+          '<div class="quiz-body"><p style="color:var(--ink-soft);max-width:62ch;margin:4px 0 16px">Answer honestly - there are no wrong answers and nothing is recorded. You\'ll get the two or three tracks most worth your next hour.</p>' +
+          '<button class="quiz-start" type="button" data-act="start">Find my tracks</button></div>';
+      } else if (quizState.i < QUIZ.length) {
+        var q = QUIZ[quizState.i];
+        inner = '<div class="quiz-head"><h2>Which fits you?</h2><span class="quiz-progress">Question ' + (quizState.i + 1) + ' of ' + QUIZ.length + '</span></div>' +
+          '<div class="quiz-body"><p class="quiz-q">' + esc(q.q) + '</p><ul class="quiz-opts">' +
+          q.opts.map(function (o, j) {
+            return '<li><button class="quiz-opt" type="button" data-act="answer" data-j="' + j + '">' + esc(o.t) + '</button></li>';
+          }).join('') + '</ul></div>';
+      } else {
+        var ranked = TRACKS.map(function (t) {
+          return { t: t, s: quizState.scores[t.id] || 0 };
+        }).sort(function (a, b) { return b.s - a.s; });
+        var max = Math.max(1, ranked[0].s);
+        inner = '<div class="quiz-head"><h2>Your best-fit tracks</h2><span class="k">Top match first - but read the runners-up too</span></div>' +
+          '<div class="quiz-body"><div class="quiz-result-rank">' +
+          ranked.slice(0, 4).map(function (r) {
+            var pct = Math.round(100 * r.s / max);
+            return '<a class="quiz-result-row" href="#/track/' + r.t.id + '" style="--track:' + r.t.color + '">' +
+              '<span class="nm">' + esc(r.t.name) + '</span>' +
+              '<span class="bar-wrap"><span class="bar" style="width:' + pct + '%"></span></span>' +
+              '<span class="pct">' + pct + '%</span></a>';
+          }).join('') +
+          '</div><p style="font-size:.82rem;color:var(--ink-faint);margin:14px 0 0">A two-minute quiz is a starting point, not a verdict. <button class="btn-ghost btn" type="button" data-act="retake" style="margin-left:8px">Retake</button></p></div>';
+      }
+      mount.innerHTML = '<div class="quiz-card">' + inner + '</div>';
+    }
+    mount.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]');
+      if (!b) return;
+      var act = b.getAttribute('data-act');
+      if (act === 'start' || act === 'retake') {
+        quizState = { i: 0, scores: {} };
+      } else if (act === 'answer') {
+        var q = QUIZ[quizState.i];
+        var o = q.opts[parseInt(b.getAttribute('data-j'), 10)];
+        for (var id in o.w) quizState.scores[id] = (quizState.scores[id] || 0) + o.w[id];
+        quizState.i++;
+      }
+      paint();
+    });
+    paint();
+  }
+
+  /* ---------- track view ---------- */
+  function renderTrack(t) {
+    document.title = t.name + ' - Vanderbilt Non-Clinical Healthcare Explorer';
+    var pr = trackProgress(t);
+
+    var stats = t.stats.map(function (s) {
+      return '<span class="stat-chip">' + esc(s.k) + '<b>' + esc(s.v) + '</b></span>';
+    }).join('');
+
+    var roles = t.field.titles.map(function (r) {
+      return '<div class="role-item"><b>' + esc(r.title) + '</b><span>' + esc(r.desc) + '</span></div>';
+    }).join('');
+
+    var day = t.field.day.map(function (d) {
+      return '<li><time>' + esc(d.time) + '</time><span>' + esc(d.what) + '</span></li>';
+    }).join('');
+
+    var thrive = t.field.thrive.map(function (x) { return '<li>' + x + '</li>'; }).join('');
+
+    var employers =
+      '<div class="emp-group"><div class="lbl">Right here in Nashville</div><div class="chips">' + chips(t.field.employers.nashville, 'local') + '</div></div>' +
+      '<div class="emp-group"><div class="lbl">National names that hire Vanderbilt students</div><div class="chips">' + chips(t.field.employers.national) + '</div></div>' +
+      '<div class="chip-note">Every employer named here has a full page in the advising wiki - ask your advisor for the interview-prep guide.</div>';
+
+    var tasks = t.project.tasks.map(function (task, i) {
+      var done = taskDone(t.id, i);
+      return '<div class="task' + (done ? ' done' : '') + '" data-task="' + i + '">' +
+        '<button class="task-head" type="button" data-toggle="' + i + '" aria-expanded="false">' +
+          '<span class="task-num">' + (done ? '&#10003;' : (i + 1)) + '</span>' +
+          '<h4>' + esc(task.title) + '</h4>' +
+          '<span class="mins">&asymp; ' + task.minutes + ' min</span>' +
+          '<span class="caret" aria-hidden="true">&#9656;</span>' +
+        '</button>' +
+        '<div class="task-body" hidden>' +
+          '<div class="task-skills">' + chips(task.skills) + '</div>' +
+          '<div class="task-sec"><div class="lbl">The situation</div><div class="prose-t">' + task.brief + '</div></div>' +
+          (task.data ? '<div class="task-sec"><div class="lbl">Your materials</div><div class="prose-t">' + task.data + '</div></div>' : '') +
+          '<div class="task-sec"><div class="lbl">Your task</div><div class="prose-t">' + task.todo + '</div></div>' +
+          (task.hint ? '<div class="task-sec"><div class="lbl">If you\'re stuck</div><div class="prose-t"><p>' + task.hint + '</p></div></div>' : '') +
+          '<div class="task-sec">' +
+            '<button class="reveal-btn" type="button" data-reveal="' + i + '">Done? Compare your work with a sample answer &darr;</button>' +
+            '<div class="model-answer" hidden><div class="lbl">One good answer - not the only one</div><div class="prose-t">' + task.model + '</div></div>' +
+          '</div>' +
+          '<div class="task-done-row"><label><input type="checkbox" data-done="' + i + '"' + (done ? ' checked' : '') + '> Mark task ' + (i + 1) + ' complete</label></div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    var completion = pr.done === pr.total
+      ? '<div class="completion-banner"><b>Project complete.</b> You just did a compressed week of real ' + esc(t.name.toLowerCase()) + ' work. If any task felt energizing rather than draining, take that seriously - the next-steps list below is where to go from here, and your advisor can connect you with alumni doing exactly this.</div>'
+      : '';
+
+    var next =
+      '<div class="cols">' +
+        '<div class="panel"><h4>Courses &amp; programs at Vanderbilt</h4><ul>' + t.next.courses.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="panel"><h4>Student orgs &amp; campus experiences</h4><ul>' + t.next.campus.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="panel"><h4>Internships &amp; programs to target</h4><ul>' + t.next.experiences.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="panel"><h4>Do this month, from your dorm</h4><ul>' + t.next.now.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
+      '</div>' +
+      '<p class="next-note">' + t.next.advisorNote + '</p>';
+
+    app.innerHTML =
+      '<div style="--track:' + t.color + ';--track-wash:' + t.wash + '">' +
+      '<nav class="crumb"><a href="#/">&larr; All six tracks</a></nav>' +
+      '<div class="track-hero">' +
+        '<div class="glyph" aria-hidden="true">' + GLYPHS[t.glyph] + '</div>' +
+        '<h1>' + esc(t.name) + '</h1>' +
+        '<p class="tagline">' + esc(t.tagline) + '</p>' +
+        '<div class="stat-row">' + stats + '</div>' +
+      '</div>' +
+      '<nav class="subnav" aria-label="Sections">' +
+        '<a href="#field">The field</a><a href="#project">The project</a><a href="#next">Your next steps</a>' +
+        '<span class="prog">' + pr.done + ' of ' + pr.total + ' tasks done</span>' +
+      '</nav>' +
+
+      '<section class="zone" id="field">' +
+        '<h2 class="zone-title">What this work actually is</h2>' +
+        '<p class="zone-sub">In plain language - before any job-posting jargon.</p>' +
+        '<div class="prose">' + t.field.what.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</div>' +
+        '<div class="callout"><b>What students get wrong:</b> ' + t.field.misconception + '</div>' +
+        '<div class="cols">' +
+          '<div class="panel"><h4>Job titles you\'d apply to</h4><div class="role-list">' + roles + '</div></div>' +
+          '<div class="panel"><h4>A realistic Tuesday, two years in</h4><ul class="day-list">' + day + '</ul></div>' +
+          '<div class="panel"><h4>You\'ll probably like this if&hellip;</h4><ul>' + thrive + '</ul></div>' +
+          '<div class="panel"><h4>Who hires for this</h4>' + employers + '</div>' +
+        '</div>' +
+      '</section>' +
+
+      '<section class="zone" id="project">' +
+        '<h2 class="zone-title">The project: try the job</h2>' +
+        '<p class="zone-sub">A virtual work sample: do the tasks in order, then compare your work against the sample answers.</p>' +
+        '<div class="project-brief">' +
+          '<span class="k">Your assignment</span>' +
+          '<h3>' + esc(t.project.title) + '</h3>' +
+          '<div class="cast">You are: <b>' + esc(t.project.role) + '</b> &middot; ' + esc(t.project.setting) + ' &middot; ' + esc(t.project.duration) + ' total</div>' +
+          t.project.premise.map(function (p) { return '<p>' + p + '</p>'; }).join('') +
+          '<p class="fiction-note">' + t.project.fictionNote + '</p>' +
+        '</div>' +
+        completion + tasks +
+      '</section>' +
+
+      '<section class="zone" id="next">' +
+        '<h2 class="zone-title">Liked it? Here\'s the on-ramp</h2>' +
+        '<p class="zone-sub">Everything below is real and specific to Vanderbilt - pulled from the career advising wiki.</p>' +
+        next +
+      '</section>' +
+      '</div>';
+
+    /* interactions */
+    app.querySelectorAll('[data-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var wrap = btn.closest('.task');
+        var body = wrap.querySelector('.task-body');
+        var open = body.hasAttribute('hidden');
+        if (open) { body.removeAttribute('hidden'); wrap.classList.add('open'); }
+        else { body.setAttribute('hidden', ''); wrap.classList.remove('open'); }
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+    app.querySelectorAll('[data-reveal]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var ans = btn.parentElement.querySelector('.model-answer');
+        var show = ans.hasAttribute('hidden');
+        if (show) { ans.removeAttribute('hidden'); btn.textContent = 'Hide the sample answer ↑'; }
+        else { ans.setAttribute('hidden', ''); btn.textContent = 'Done? Compare your work with a sample answer ↓'; }
+      });
+    });
+    app.querySelectorAll('[data-done]').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        setTaskDone(t.id, parseInt(cb.getAttribute('data-done'), 10), cb.checked);
+        renderTrack(t); // repaint counters + banner
+        var reopened = app.querySelector('.task[data-task="' + cb.getAttribute('data-done') + '"]');
+        if (reopened && !cb.checked) {
+          reopened.querySelector('.task-body').removeAttribute('hidden');
+          reopened.classList.add('open');
+        }
+      });
+    });
+    /* subnav highlight on scroll */
+    var links = app.querySelectorAll('.subnav a');
+    var zones = ['field', 'project', 'next'].map(function (id) { return document.getElementById(id); });
+    function onScroll() {
+      var y = window.scrollY + 130, cur = 0;
+      zones.forEach(function (z, i) { if (z && z.offsetTop <= y) cur = i; });
+      links.forEach(function (l, i) { l.classList.toggle('on', i === cur); });
+    }
+    window.removeEventListener('scroll', window.__vhceScroll || onScroll);
+    window.__vhceScroll = onScroll;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    if (!location.hash.match(/#(field|project|next)$/)) window.scrollTo(0, 0);
+  }
+
+  /* ---------- theme toggle ---------- */
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var root = document.documentElement;
+    var cur = root.getAttribute('data-theme');
+    if (!cur) cur = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ---------- router ---------- */
+  function route() {
+    var h = location.hash || '#/';
+    var m = h.match(/^#\/track\/([a-z0-9-]+)/);
+    if (m) {
+      var t = null;
+      for (var i = 0; i < TRACKS.length; i++) if (TRACKS[i].id === m[1]) t = TRACKS[i];
+      if (t) { renderTrack(t); return; }
+    }
+    renderHome();
+  }
+  window.addEventListener('hashchange', route);
+  route();
+})();
+</script>
+</body>
+</html>
