@@ -1,0 +1,128 @@
+/* Track: Healthcare Strategy & Consulting */
+window.EXPLORER_TRACKS = window.EXPLORER_TRACKS || [];
+window.EXPLORER_TRACKS.push({
+ id: "strategy-consulting",
+ name: "Strategy & Consulting",
+ short: "Hospitals, health plans, and drug companies pay outside teams to answer their hardest questions. You're the team.",
+ color: "#a3781f",
+ wash: "#f3ead3",
+ glyph: "compass",
+ entryTitle: "Entry role: Analyst / Associate",
+ tagline: "Consultants get hired when a healthcare organization faces a question too big, too urgent, or too politically loaded to answer internally: Should we build it? Buy it? Fix it? Exit it? Your job is to turn ambiguity into a defensible recommendation in about six weeks.",
+ stats: [
+ { k: "Entry job titles", v: "Business Analyst, Associate Consultant" },
+ { k: "Recruiting starts", v: "Sophomore-junior year (early!)" },
+ { k: "Signature deliverable", v: "A slide deck a CEO acts on" },
+ { k: "Nashville advantage", v: "Huron, Chartis & ECG have offices here" }
+ ],
+ field: {
+ what: [
+ "A hospital system is losing surgical cases to a competitor. A health plan wants to know whether to cover a new digital therapy. A private equity firm needs someone to pressure-test a clinic chain before writing a nine-figure check. In each case, leadership hires a consulting team - typically two to six people - that parachutes in, gathers data, interviews stakeholders, builds analysis, and delivers a recommendation with the evidence to back it.",
+ "As the analyst on that team, you own the engine room: you build the Excel models, dig through claims and market data, draft the slides, and increasingly present your own sections to the client. The partners bring relationships and judgment; you bring speed, rigor, and the first draft of the answer. It is the fastest apprenticeship in business - you'll see more organizations in two years than most executives see in twenty.",
+ "Healthcare is one of consulting's biggest practice areas because the industry is enormous, heavily regulated, and constantly being reshaped by policy and technology. Firms range from generalists with health practices (McKinsey, Bain, BCG, Deloitte) to healthcare pure-plays (Chartis, ECG, Clearview, Health Advances) - the pure-plays often go deeper clinically, the generalists rotate you across industries."
+ ],
+ misconception: "That consulting requires a business major. Firms deliberately hire biology, MHS, economics, and engineering majors - they teach you the frameworks in training. What they can't teach (and screen hard for in case interviews) is structured thinking: can you break a fuzzy question into pieces, do quick math out loud, and communicate a clear answer under pressure?",
+ titles: [
+ { title: "Business Analyst / Associate Consultant", desc: "The undergrad entry role at McKinsey, Bain, BCG, L.E.K., and most boutiques. Research, modeling, slide-building, client interviews." },
+ { title: "Healthcare Analyst (boutique)", desc: "Same work at healthcare specialists like Chartis, ECG, Clearview, Putnam - deeper clinical content, less industry-hopping." },
+ { title: "Research Analyst (Advisory Board)", desc: "Best-practice research for hundreds of hospital members instead of one client at a time. Writing-heavy, great teacher of the industry." },
+ { title: "Decision Analytics Associate (ZS)", desc: "The data-science flavor of consulting - pharma commercial analytics, sales-force sizing, market models." }
+ ],
+ day: [
+ { time: "8:30a", what: "Team check-in: partner reshuffles this week's priorities after last night's client call." },
+ { time: "9:00a", what: "Rebuild the surgical-volume model with the client's actual case data that finally arrived." },
+ { time: "11:00a", what: "Interview an orthopedic surgeon about why cases are leaving - your third of five stakeholder interviews." },
+ { time: "12:30p", what: "Lunch at your desk; skim a Sg2 market forecast for the metro area." },
+ { time: "1:30p", what: "Turn this morning's analysis into six slides; agonize over one chart title until it states the insight." },
+ { time: "4:00p", what: "Case-team problem-solving session: your cannibalization math changes the emerging recommendation." },
+ { time: "6:30p", what: "Send the revised deck to the manager; prep tomorrow's client working session." }
+ ],
+ employers: {
+ nashville: ["Huron (Nashville office)", "The Chartis Group (Nashville)", "ECG Management Consultants (Nashville)", "Jarrard Inc.", "C3 Consulting", "Cumberland Consulting (Cognizant)"],
+ national: ["McKinsey & Company", "Bain & Company", "BCG", "L.E.K. Consulting", "Deloitte LSHC", "Oliver Wyman Health", "EY-Parthenon", "ZS Associates", "Clearview Healthcare Partners", "Health Advances", "Putnam Associates", "Advisory Board (Optum)", "Guidehouse", "Alvarez & Marsal Healthcare", "Trinity Life Sciences"]
+ },
+ thrive: [
+ "You like the <b>question</b> more than any particular subject - this month it's surgery centers, next month it's a pharma launch",
+ "Deadlines sharpen you instead of flattening you",
+ "You'd rather give a clear answer that's 80% certain than a hedge that's 100% safe",
+ "Feedback several times a day sounds like a feature, not a threat",
+ "You want maximum learning per year early in your career and you'll trade some lifestyle for it"
+ ]
+ },
+ project: {
+ title: "Should Riverbend Health build an outpatient surgery center?",
+ role: "Analyst, Harpeth Strategy Group (a healthcare strategy boutique in Nashville)",
+ setting: "6-week engagement, week 2",
+ duration: "≈ 2 hours",
+ premise: [
+ "Your client is <b>Riverbend Health</b>, a three-hospital nonprofit system in Middle Tennessee. Its CEO has watched orthopedic surgeons drift cases to a competitor's new ambulatory surgery center (ASC) - a freestanding outpatient facility where procedures cost payers roughly a third less than in a hospital. The board meets in five weeks and wants a recommendation: <b>build our own ASC, partner with the surgeons on a joint venture, or defend the status quo?</b>",
+ "The partner leading the engagement has given you, the analyst, four classic workstreams. Work them in order - each one is a real task that a first-year analyst would own."
+ ],
+ fictionNote: "Riverbend Health and Harpeth Strategy Group are fictional teaching constructs; the numbers are simplified but directionally realistic. The dynamic - payers pushing surgery out of hospitals and into ASCs - is one of the biggest forces in U.S. healthcare right now, and a scenario very much like this one runs inside real firms like Chartis, ECG, and Huron every month.",
+ tasks: [
+ {
+ title: "Structure the problem before touching any data",
+ minutes: 25,
+ skills: ["MECE thinking", "Issue trees", "Hypothesis-driven work"],
+ brief: "<p>Day one of any engagement, before any analysis, a good consultant asks: <i>what would we need to believe for each answer to be right?</i> The tool for this is an <b>issue tree</b> - breaking the big question into a handful of sub-questions that are <b>MECE</b>: mutually exclusive (no overlaps) and collectively exhaustive (nothing important missing). The tree becomes the project plan: every branch gets an owner, an analysis, and a deadline.</p>",
+ todo: "<ol><li>Write the decision question at the top of a page: <i>“Should Riverbend build, partner, or hold?”</i></li><li>Break it into 3-5 major branches - the big things that must be true or false for the answer to change.</li><li>Under each branch, list 2-3 specific questions you could actually analyze with data or interviews.</li><li>Check yourself: do any branches overlap? Is anything a board member would ask missing?</li></ol>",
+ hint: "Almost every market-entry tree has some version of: Is the market attractive? Can <i>we</i> win in it? Do the economics work for <i>us</i>? What are the risks of acting - and of not acting?",
+ model: "<p>One classic four-branch tree:</p><ol><li><b>Market: is outpatient surgery in our metro worth chasing?</b> - How many cases today, growing how fast? Which procedures are moving to ASCs, and what do payers want?</li><li><b>Position: would we win share or just move our own cases?</b> - Where do our surgeons operate today and what would make them shift? What has the competitor ASC actually taken from us?</li><li><b>Economics: does an ASC create or destroy margin for the system?</b> - Per-case margin in an ASC vs. our hospitals; cannibalization vs. retention vs. new capture; build cost and break-even volume.</li><li><b>Execution & risk: can we pull it off?</b> - Physician joint-venture terms, certificate-of-need regulation, staffing, and the risk of doing nothing while payers steer cases away.</li></ol><p>Notice what makes this MECE: market facts, competitive position, money, and feasibility don't overlap, and together they cover everything the board will ask. Your tree doesn't need these exact words - it needs this <i>discipline</i>.</p>"
+ },
+ {
+ title: "Size the market on the back of an envelope",
+ minutes: 30,
+ skills: ["Market sizing", "Estimation", "Sanity-checking"],
+ brief: "<p>The partner stops by your desk: <i>“Before the data request comes back - roughly how many outpatient orthopedic surgeries happen in the Nashville metro each year? I need a number for tomorrow's steering call.”</i> This is a <b>top-down market sizing</b>, and it's also the single most common case-interview exercise. The skill isn't precision - it's a transparent chain of assumptions someone can challenge line by line.</p>",
+ data: "<p>Use round planning figures (close enough for this exercise):</p><ul><li>Nashville metro population: <b>≈ 2.1 million</b></li><li>National benchmark: roughly <b>10-12 orthopedic surgeries per 1,000 people per year</b> across all settings</li><li>Industry estimate: about <b>60%</b> of orthopedic procedures can now safely be done outpatient</li></ul>",
+ todo: "<ol><li>Chain the assumptions: population × procedure rate × outpatient share.</li><li>State a single number <i>and</i> a plausible range.</li><li>Sanity-check it a second way: if the metro has ~25 orthopedic operating rooms across all facilities, does your number imply a believable cases-per-room-per-day?</li></ol>",
+ model: "<p><b>The math:</b> 2.1M people × 11 per 1,000 ≈ <b>23,000 orthopedic surgeries/year</b> in the metro. At a 60% outpatient-eligible share, that's <b>≈ 14,000 outpatient-eligible cases/year</b>, with a defensible range of 11,000-17,000 depending on the rate you assumed.</p><p><b>The sanity check:</b> 14,000 cases ÷ 25 ORs ÷ 250 operating days ≈ 2.2 cases per room per day - believable for a mixed market (a dedicated ASC room runs 4-6 short cases a day; hospital rooms run fewer, longer ones). The number holds.</p><p><b>What the partner actually cares about:</b> you said the assumptions out loud, gave a range instead of false precision, and checked it from a second direction. That habit is 80% of what interviewers grade in a sizing question.</p>"
+ },
+ {
+ title: "Find the story in the client's data",
+ minutes: 35,
+ skills: ["Data analysis", "Unit economics", "Insight generation"],
+ brief: "<p>The client's finance team sends the case-level data you requested, plus a bombshell buried in a footnote: <b>the state's largest commercial insurer will stop paying hospital rates for most of these procedures within two years</b>, steering members to ASCs instead. The partner wants to know: <i>what does this table actually tell us?</i></p>",
+ data: "<div class=\"data-block\"><table class=\"d\"><caption>Riverbend outpatient surgical volume & unit economics (most recent year)</caption><thead><tr><th>Procedure group</th><th class=\"num\">Annual cases</th><th class=\"num\">Paid in hospital (HOPD)</th><th class=\"num\">Paid in ASC</th><th class=\"num\">ASC cost/case</th></tr></thead><tbody><tr><td>Total joint replacement</td><td class=\"num\">1,200</td><td class=\"num\">$21,000</td><td class=\"num\">$14,500</td><td class=\"num\">$9,800</td></tr><tr><td>Spine (single-level)</td><td class=\"num\">500</td><td class=\"num\">$18,000</td><td class=\"num\">$12,000</td><td class=\"num\">$8,900</td></tr><tr><td>Sports medicine (ACL, scopes)</td><td class=\"num\">2,100</td><td class=\"num\">$9,500</td><td class=\"num\">$6,800</td><td class=\"num\">$4,300</td></tr><tr><td>Hand & other</td><td class=\"num\">1,600</td><td class=\"num\">$6,200</td><td class=\"num\">$4,600</td><td class=\"num\">$3,100</td></tr></tbody></table></div><p>Assume ~45% of these cases are commercially insured, and that the payer policy will effectively move <b>40% of commercial cases out of hospital settings</b> whether or not Riverbend acts.</p>",
+ todo: "<ol><li>Compute the per-case <b>margin an ASC would earn</b> for each procedure group (ASC payment − ASC cost).</li><li>Estimate the annual revenue that the payer policy puts at risk if Riverbend does nothing (cases shifting × hospital payment).</li><li>Write the “so what” in two sentences: what is the strategic insight, stated the way you'd say it to the CEO?</li></ol>",
+ hint: "The trap is comparing ASC margin to hospital margin and concluding the ASC looks worse. The real comparison is ASC margin vs. <b>zero</b> - because the shifting cases won't stay in the hospital either way.",
+ model: "<p><b>1 - ASC margin per case:</b> joints <b>$4,700</b>, spine <b>$3,100</b>, sports med <b>$2,500</b>, hand <b>$1,500</b>. Weighted across volumes, roughly $2,600 per case.</p><p><b>2 - Revenue at risk:</b> ≈ 5,400 total cases × 45% commercial × 40% shifting ≈ <b>970 cases/year</b> leaving hospital settings. Valued at hospital rates (weighted avg ≈ $11,400), that's <b>≈ $11M/year of revenue at risk</b> - and if a competitor's ASC captures it, Riverbend keeps none of it and may lose the surgeons' loyalty too.</p><p><b>3 - The “so what”:</b> <i>“This isn't a build-vs-don't-build decision - the cases are leaving the hospital either way; the payer just decided that for us. The only real question is whether the shifted cases land in our ASC at ~$2,600 of margin each, or in a competitor's at zero.”</i></p><p>That reframing - from <i>should we?</i> to <i>who captures the inevitable shift?</i> - is what an insight looks like in consulting. The numbers exist to earn that sentence.</p>"
+ },
+ {
+ title: "Deliver the recommendation, answer-first",
+ minutes: 30,
+ skills: ["Pyramid principle", "Executive communication", "Slide writing"],
+ brief: "<p>Time to write the summary slide the partner will present to the board. Consulting communication is <b>answer-first</b> (the “pyramid principle”): lead with the recommendation, support it with three reasons, then acknowledge risks with mitigations. Executives read the title and decide whether to trust the rest - so every title must be a full sentence that carries the message on its own.</p>",
+ todo: "<ol><li>Write the slide <b>title as the recommendation itself</b> - a complete sentence, not a topic label like “ASC Analysis.”</li><li>Write <b>three supporting points</b>, each one line, each backed by a number from Tasks 2-3.</li><li>Add a <b>risks & mitigations</b> line and a <b>next steps</b> line.</li><li>Read it aloud. Could a board member act on this slide if the meeting ended after 60 seconds? That's the bar.</li></ol>",
+ model: "<p><b>Title:</b> “Riverbend should break ground on a physician-partnered ASC within 12 months - the case shift is happening with or without us.”</p><p><b>Supporting points:</b></p><ul><li>Payer policy will move ~970 of our commercial cases (≈ $11M revenue) out of hospital settings within two years - inaction forfeits them to competitors.</li><li>The metro's ~14,000 outpatient-eligible orthopedic cases are growing, and our employed surgeons currently perform ~5,400 of them - enough to anchor a 4-OR center on day one.</li><li>At ~$2,600 average margin per case, captured-plus-retained volume supports break-even in year 3 under conservative assumptions.</li></ul><p><b>Risks & mitigations:</b> surgeon defection (mitigate with joint-venture equity); construction and licensure timeline (begin certificate-of-need filing now).</p><p><b>Next steps:</b> board approval to fund site selection and JV term-sheet negotiations this quarter.</p><p><b>Why this works:</b> the title takes a position; every bullet has a number; risk is acknowledged rather than hidden. Compare against your version - the most common gap is a title that describes the topic instead of stating the answer.</p>"
+ }
+ ]
+ },
+ next: {
+ courses: [
+ "<b>MHS 2140: Health Care in the U.S.</b> - the system-knowledge foundation every case interview assumes",
+ "<b>Economics electives</b> (health economics, econometrics) - the analytical signal firms screen for",
+ "<b>PUBH 5520 / 5525</b> (health policy & health economics) for grad-level depth",
+ "Any statistics or data-science course - SQL and Excel fluency show up in first-round screens"
+ ],
+ campus: [
+ "<b>Vanderbilt Undergraduate Consulting Club</b> - case-interview prep is non-negotiable for this track; start 12+ months before recruiting",
+ "<b>180 Degrees Consulting</b> and <b>SCNO</b> - real consulting projects for nonprofits, perfect resume proof",
+ "<b>Vanderbilt Business & Medicine Club / Business Healthcare Association (Owen)</b> - healthcare-specific networking",
+ "Healthcare case competitions (UAB Health Administration, CHIP Clarion, IHI) - listed in the advising wiki"
+ ],
+ experiences: [
+ "Summer internships: <b>McKinsey BA</b>, <b>Bain ACI</b>, <b>BCG Summer Associate</b> - applications open ~June before junior year",
+ "Healthcare boutiques with strong undergrad pipelines: <b>Chartis</b>, <b>Clearview</b>, <b>Health Advances</b>, <b>Putnam</b>, <b>ECG</b>, <b>Huron</b>",
+ "Sophomore/first-gen early programs: Bain Building Entrepreneurial Leaders, McKinsey Discover, BCG Early Insight",
+ "<b>Advisory Board Research Analyst</b> - a writing-heavy alternative entry into healthcare strategy"
+ ],
+ now: [
+ "Do one free Forage consulting simulation (BCG or Accenture) to add to your resume this week",
+ "Read <i>The Pyramid Principle</i> summary + one Sg2 or Advisory Board market forecast",
+ "Book a case-interview practice session with a club member - your first case should be embarrassing in private, not in a screen",
+ "Ask your career advisor for the wiki's interview-prep guides: McKinsey, Bain, BCG, Huron, Chartis, and ECG all have one"
+ ],
+ advisorNote: "Your advisor's wiki has full interview-prep guides for ten consulting employers, 19 curated consulting internship listings with deadlines, and alumni now at several of these firms who take Vanderbilt coffee chats. Consulting recruiting runs absurdly early - if this track clicked, make that advising appointment this semester, not next."
+ }
+});
