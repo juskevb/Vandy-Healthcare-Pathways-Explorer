@@ -223,7 +223,7 @@ a { color: var(--accent-ink); }
 .subnav a:hover, .subnav a.on { color: var(--ink); border-bottom-color: var(--track); }
 .subnav .prog { margin-left: auto; align-self: center; font-size: .76rem; color: var(--ink-faint); padding-right: 6px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-section.zone { padding: 40px 0 8px; }
+section.zone { padding: 40px 0 8px; scroll-margin-top: 108px; }
 .zone-title { font-family: var(--serif); font-size: 1.45rem; margin: 0 0 6px; }
 .zone-sub { color: var(--ink-faint); font-size: .88rem; margin: 0 0 22px; }
 
@@ -1377,7 +1377,7 @@ window.EXPLORER_TRACKS.push({
   }
 
   /* ---------- track view ---------- */
-  function renderTrack(t) {
+  function renderTrack(t, restore) {
     document.title = t.name + ' - Vanderbilt Non-Clinical Healthcare Explorer';
     var pr = trackProgress(t);
 
@@ -1447,7 +1447,9 @@ window.EXPLORER_TRACKS.push({
         '<div class="stat-row">' + stats + '</div>' +
       '</div>' +
       '<nav class="subnav" aria-label="Sections">' +
-        '<a href="#field">The field</a><a href="#project">The project</a><a href="#next">Your next steps</a>' +
+        '<a href="#/track/' + t.id + '" data-sec="field">The field</a>' +
+        '<a href="#/track/' + t.id + '" data-sec="project">The project</a>' +
+        '<a href="#/track/' + t.id + '" data-sec="next">Your next steps</a>' +
         '<span class="prog">' + pr.done + ' of ' + pr.total + ' tasks done</span>' +
       '</nav>' +
 
@@ -1505,13 +1507,21 @@ window.EXPLORER_TRACKS.push({
     });
     app.querySelectorAll('[data-done]').forEach(function (cb) {
       cb.addEventListener('change', function () {
+        var open = [];
+        app.querySelectorAll('.task.open').forEach(function (w) { open.push(w.getAttribute('data-task')); });
         setTaskDone(t.id, parseInt(cb.getAttribute('data-done'), 10), cb.checked);
-        renderTrack(t); // repaint counters + banner
-        var reopened = app.querySelector('.task[data-task="' + cb.getAttribute('data-done') + '"]');
-        if (reopened && !cb.checked) {
-          reopened.querySelector('.task-body').removeAttribute('hidden');
-          reopened.classList.add('open');
-        }
+        renderTrack(t, { y: window.scrollY, open: open }); // repaint counters + banner in place
+      });
+    });
+    /* section tabs scroll within the page; the router hash stays on the track */
+    app.querySelectorAll('.subnav a[data-sec]').forEach(function (lnk) {
+      lnk.addEventListener('click', function (e) {
+        e.preventDefault();
+        var z = document.getElementById(lnk.getAttribute('data-sec'));
+        if (z) z.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+          block: 'start'
+        });
       });
     });
     /* subnav highlight on scroll */
@@ -1526,7 +1536,18 @@ window.EXPLORER_TRACKS.push({
     window.__vhceScroll = onScroll;
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    if (!location.hash.match(/#(field|project|next)$/)) window.scrollTo(0, 0);
+    if (restore) {
+      (restore.open || []).forEach(function (i) {
+        var w = app.querySelector('.task[data-task="' + i + '"]');
+        if (!w) return;
+        w.querySelector('.task-body').removeAttribute('hidden');
+        w.classList.add('open');
+        w.querySelector('.task-head').setAttribute('aria-expanded', 'true');
+      });
+      window.scrollTo(0, restore.y || 0);
+    } else {
+      window.scrollTo(0, 0);
+    }
   }
 
   /* ---------- theme toggle ---------- */
