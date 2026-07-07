@@ -237,7 +237,8 @@ section.zone { padding: 40px 0 8px; scroll-margin-top: 108px; }
 }
 .callout b { color: var(--ink); }
 
-.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 22px; margin: 26px 0; align-items: start; }
+.cols { columns: 3 290px; column-gap: 22px; margin: 26px 0; }
+.cols > .panel { break-inside: avoid; margin-bottom: 22px; }
 .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-raised); padding: 18px 20px; }
 .panel h4 { margin: 0 0 10px; font-size: .78rem; text-transform: uppercase; letter-spacing: .13em; color: var(--ink-faint); font-weight: 600; }
 .panel ul { margin: 0; padding-left: 18px; color: var(--ink-soft); font-size: .93rem; }
@@ -565,9 +566,8 @@ window.EXPLORER_TRACKS.push({
  ],
  campus: [
  "<b>Vanderbilt Undergraduate Consulting Club</b> - case-interview prep is non-negotiable for this track; start 12+ months before recruiting",
- "<b>180 Degrees Consulting</b> and <b>SCNO</b> - real consulting projects for nonprofits, perfect resume proof",
- "<b>Vanderbilt Business & Medicine Club / Business Healthcare Association (Owen)</b> - healthcare-specific networking",
- "Healthcare case competitions (UAB Health Administration, CHIP Clarion, IHI) - listed in the advising wiki"
+ "<b>180 Degrees Consulting</b> and <b>SCNO</b> - real consulting projects for local nonprofits",
+ "<b>Vanderbilt Business & Medicine Club / Business Healthcare Association (Owen)</b> - healthcare-specific networking"
  ],
  experiences: [
  "Summer internships: <b>McKinsey BA</b>, <b>Bain ACI</b>, <b>BCG Summer Associate</b> - applications open ~June before junior year",
@@ -576,12 +576,10 @@ window.EXPLORER_TRACKS.push({
  "<b>Advisory Board Research Analyst</b> - a writing-heavy alternative entry into healthcare strategy"
  ],
  now: [
- "Do one free Forage consulting simulation (BCG or Accenture) to add to your resume this week",
+ "Try a free online consulting simulation (BCG or Accenture on Forage)",
  "Read <i>The Pyramid Principle</i> summary + one Sg2 or Advisory Board market forecast",
- "Book a case-interview practice session with a club member - your first case should be embarrassing in private, not in a screen",
- "Ask your career advisor for the wiki's interview-prep guides: McKinsey, Bain, BCG, Huron, Chartis, and ECG all have one"
- ],
- advisorNote: "Your advisor's wiki has full interview-prep guides for ten consulting employers, 19 curated consulting internship listings with deadlines, and alumni now at several of these firms who take Vanderbilt coffee chats. Consulting recruiting runs absurdly early - if this track clicked, make that advising appointment this semester, not next."
+ "Book a case-interview practice session with a club member"
+ ]
  }
 });
 
@@ -707,12 +705,11 @@ window.EXPLORER_TRACKS.push({
  "<b>VMG Health</b> (Nashville) - healthcare valuation analyst roles, a underrated on-ramp to the whole sector"
  ],
  now: [
- "Do a free Forage IB simulation (J.P. Morgan or Bank of America) this week - bankers actually notice it on freshman resumes",
+ "Try a free investment banking simulation (J.P. Morgan or Bank of America on Forage)",
  "Learn the three financial statements cold, then build one practice LBO from a free Wall Street Prep/Breaking Into Wall Street sample",
  "Follow one healthcare deal in the news end-to-end and write a half-page: who bought whom, at what multiple, and why",
- "Ask your advisor which Vanderbilt alumni are at Leerink, Cain Brothers, and the Nashville PE funds - warm intros beat cold applications"
- ],
- advisorNote: "The advising wiki tracks 25+ healthcare IB and PE internship listings (including every major healthcare bank's summer analyst program), Nashville's full buy-side landscape, and alumni contacts in several of these firms. Banking recruiting timelines are brutal - sophomore spring for junior summer - so if this track clicked, get the timeline from your advisor now."
+ "Look up Vanderbilt alumni at Leerink, Cain Brothers, and the Nashville PE funds on LinkedIn - warm intros beat cold applications"
+ ]
  }
 });
 
@@ -832,16 +829,15 @@ window.EXPLORER_TRACKS.push({
  experiences: [
  "<b>HCA Pathways Internship</b> - the marquee Nashville corporate-operations internship",
  "<b>VUMC student employment & administrative roles</b> - operations exposure without leaving campus",
- "Summer administrative internships: <b>Cleveland Clinic, Mayo, Stanford, Houston Methodist, SSM Health, UCLA Health, Emory</b> (the wiki tracks all of these)",
+ "Summer administrative internships: <b>Cleveland Clinic, Mayo, Stanford, Houston Methodist, SSM Health, UCLA Health, Emory</b>",
  "Revenue-cycle and supply-chain analyst roles: <b>Parallon, Ensemble, HealthTrust</b> - underrated, hiring-heavy entry doors"
  ],
  now: [
- "Complete the free IHI Open School Basic Certificate (~15 hours) - put it on your resume this month",
+ "Complete the free IHI Open School Basic Certificate (~15 hours)",
  "Take a Lean Six Sigma Yellow Belt fundamentals course (ASQ) - DMAIC vocabulary comes up in every ops interview",
- "Shadow one hospital administrator for a day - your advisor can arrange this through VUMC or alumni",
+ "Shadow a hospital administrator for a day - VUMC and Nashville's hospital community make this easier here than almost anywhere",
  "Read one week of Becker's Hospital Review headlines; fluency in the industry's daily conversation is cheap and visible"
- ],
- advisorNote: "Nashville is the single best city in America to start a hospital-operations career, and the advising wiki reflects it: HCA, Lifepoint, Ascension, CHS, and VUMC internship listings, 12+ summer administrative internship programs nationwide, and alumni in operations roles across the city. Ask your advisor for the HCA Pathways prep guide and an alumni introduction."
+ ]
  }
 });
 
@@ -959,18 +955,16 @@ window.EXPLORER_TRACKS.push({
  "Data Science Institute workshops - free, open across schools"
  ],
  experiences: [
- "Internships the wiki tracks: <b>Optum/UnitedHealth</b>, <b>CVS InnoTech</b>, <b>Flatiron Health</b>, <b>Komodo Health</b>, <b>Tempus</b>, <b>Epic (SWE/PM/TS)</b>, <b>Oracle Health</b>, <b>BCBS of Tennessee</b>",
+ "Internships to target: <b>Optum/UnitedHealth</b>, <b>CVS InnoTech</b>, <b>Flatiron Health</b>, <b>Komodo Health</b>, <b>Tempus</b>, <b>Epic (SWE/PM/TS)</b>, <b>Oracle Health</b>, <b>BCBS of Tennessee</b>",
  "Nashville health-tech: <b>HCA ITG</b> data/IT analyst roles, <b>Embold Health</b>, <b>XSolis</b>, <b>Medalogix</b>",
  "<b>Google Data Analytics Certificate</b> + <b>Tableau Desktop Specialist</b> - the two highest-ROI credentials for this track",
- "Kaggle healthcare datasets & DrivenData competitions - portfolio pieces that double as resume lines"
+ "Kaggle healthcare datasets & DrivenData competitions - portfolio projects that show real skill"
  ],
  now: [
- "Build one dashboard this month from public CMS or CDC data (the wiki's “Health Data Dashboard Project” walks through it) and put the link on your resume",
+ "Build a dashboard from public CMS or CDC data - a small project you can show and talk through in interviews",
  "Do 20 SQL exercises this week - sqlbolt.com or equivalent; the interview screen is usually a live query",
- "Learn to read a claims row: ICD-10, CPT, NDC - one evening with CMS.gov covers the basics",
- "Ask your advisor for the Epic and Optum interview-prep notes and any alumni in health-tech product roles"
- ],
- advisorNote: "The advising wiki lists 30+ data and health-tech opportunities - from Epic and Optum internships to Nashville startups most students have never heard of - plus alumni working in health-tech product, strategy, and analytics who take coffee chats. If the SQL task was fun rather than painful, tell your advisor: that reaction is the actual aptitude test."
+ "Learn to read a claims row: ICD-10, CPT, NDC - one evening with CMS.gov covers the basics"
+ ]
  }
 });
 
@@ -1083,7 +1077,7 @@ window.EXPLORER_TRACKS.push({
  "MHS courses on the U.S. system - market access is impossible to understand without payer basics"
  ],
  campus: [
- "<b>Faculty research assistant roles</b> - the wiki tracks openings; any wet-lab or clinical research exposure counts",
+ "<b>Faculty research assistant roles</b> - any wet-lab or clinical research exposure counts",
  "<b>VUSRP</b> (Vanderbilt Undergraduate Summer Research Program) and <b>Immersion Vanderbilt</b> projects in clinical research",
  "<b>Nucleate Vanderbilt</b> - the biotech-careers community on campus",
  "ISPOR, DIA, and ACRP student memberships - cheap, and they signal seriousness"
@@ -1091,16 +1085,15 @@ window.EXPLORER_TRACKS.push({
  experiences: [
  "<b>VUMC Clinical Research Coordinator / RA roles</b> - hired continuously; the classic first job in this field",
  "<b>Sarah Cannon Research Institute</b> clinical research roles - oncology trials at global scale, in Nashville",
- "Pharma summer internships the wiki tracks: <b>Pfizer Futures, Lilly, Merck, BMS, AstraZeneca, Regeneron, Moderna, Genentech</b>",
+ "Pharma summer internships: <b>Pfizer Futures, Lilly, Merck, BMS, AstraZeneca, Regeneron, Moderna, Genentech</b>",
  "CRO new-grad programs: <b>Medpace CRA/CTA</b>, <b>ICON</b>, <b>PPD/Thermo Fisher</b>, <b>IQVIA</b>; life-science strategy: <b>Trinity, Putnam, Clearview, Health Advances</b>"
  ],
  now: [
  "Read one real NEJM or JAMA trial abstract weekly and compute the ARR and NNT yourself - ten minutes that compounds into an interview superpower",
  "Take the free NIH/CITI human-subjects research training - many CRC postings list it, few students have it",
  "Do a free Forage life-sciences simulation to see the commercial side",
- "Ask your advisor about VUMC and Sarah Cannon openings and which alumni went pharma - the CRC path is Nashville's most reliable entry"
- ],
- advisorNote: "The wiki tracks 25+ research-track opportunities - VUMC and Sarah Cannon coordinator roles, every major pharma summer internship, CRO new-grad programs, and NIH post-bac fellowships - plus faculty and lab pages if you want research experience first. If you're weighing this against med school, say so: your advisor prepares that exact conversation constantly."
+ "Browse VUMC and Sarah Cannon coordinator openings - the CRC path is Nashville's most reliable entry into this field"
+ ]
  }
 });
 
@@ -1219,17 +1212,16 @@ window.EXPLORER_TRACKS.push({
  ],
  experiences: [
  "Nashville: <b>The Sycamore Institute internships</b>, <b>Tennessee Justice Center health policy internships</b>, <b>TN Dept. of Health internships & fellowships</b>, <b>Metro Public Health Department</b>",
- "D.C. pipeline: <b>congressional internships</b> (health committees), <b>KFF, Brookings, Urban Institute, Mathematica, CBPP internships</b> - all tracked in the wiki",
+ "D.C. pipeline: <b>congressional internships</b> (health committees), <b>KFF, Brookings, Urban Institute, Mathematica, CBPP internships</b>",
  "Federal: <b>CDC Pathways / Public Health Associate Program (PHAP)</b>, <b>HHS/CMS Pathways internships</b>, <b>ORISE fellowships</b>",
  "Population health on campus: <b>Health Equity Research Project</b>, community organizations (Siloam Health, Neighborhood Health volunteer roles)"
  ],
  now: [
  "Read three KFF issue briefs and reverse-engineer their structure - that structure is the job",
- "Write one practice policy brief (this project's Task 4 counts) and have your advisor or a professor tear it apart",
+ "Write one practice policy brief (this project's Task 4 counts) and have a professor tear it apart",
  "Follow the state legislature's health committee for one session cycle; Tennessee's is a masterclass happening two miles from campus",
  "Sign up for one health-policy newsletter (KFF Health News, or the Sycamore Institute's Tennessee-focused one) and actually read it"
- ],
- advisorNote: "The wiki tracks 30+ policy and public-health opportunities - from the Sycamore Institute and Tennessee Justice Center here in Nashville to KFF, Brookings, CDC PHAP, and congressional internships - plus which ones want writing samples (most). Policy hiring runs on clips and networks: ask your advisor to review your first writing sample and to introduce you to alumni in Nashville's health-policy scene."
+ ]
  }
 });
 
@@ -1318,7 +1310,7 @@ window.EXPLORER_TRACKS.push({
       '<div id="quizMount"></div>' +
       '<div class="grid-head"><h2>The six tracks</h2><span class="k">Ordered by nothing - start where you\'re curious</span></div>' +
       '<div class="track-grid">' + cards + '</div>' +
-      '<footer class="colophon">Built from the Vanderbilt career advising wiki: employer names, opportunity lists, courses, and student organizations referenced here are real and curated by your career advisor. Project scenarios use fictional client names and simplified data - they are teaching cases, not descriptions of real organizations. Questions, or want an introduction to an employer listed here? Ask your career advisor.</footer>';
+      '<footer class="colophon">Employer, course, and organization names on this site are real. Project scenarios use fictional client names and simplified data - they are teaching cases, not descriptions of real organizations.</footer>';
 
     renderQuiz(document.getElementById('quizMount'));
     window.scrollTo(0, 0);
@@ -1332,7 +1324,7 @@ window.EXPLORER_TRACKS.push({
       var inner;
       if (!quizState) {
         inner = '<div class="quiz-head"><h2>Not sure where to start?</h2><span class="k">' + QUIZ.length + ' questions &middot; 2 minutes</span></div>' +
-          '<div class="quiz-body"><p style="color:var(--ink-soft);max-width:62ch;margin:4px 0 16px">Answer honestly - there are no wrong answers and nothing is recorded. You\'ll get the two or three tracks most worth your next hour.</p>' +
+          '<div class="quiz-body"><p style="color:var(--ink-soft);max-width:62ch;margin:4px 0 16px">There are no wrong answers. You\'ll get the two or three tracks most worth your next hour.</p>' +
           '<button class="quiz-start" type="button" data-act="start">Find my tracks</button></div>';
       } else if (quizState.i < QUIZ.length) {
         var q = QUIZ[quizState.i];
@@ -1398,7 +1390,7 @@ window.EXPLORER_TRACKS.push({
     var employers =
       '<div class="emp-group"><div class="lbl">Right here in Nashville</div><div class="chips">' + chips(t.field.employers.nashville, 'local') + '</div></div>' +
       '<div class="emp-group"><div class="lbl">National names that hire Vanderbilt students</div><div class="chips">' + chips(t.field.employers.national) + '</div></div>' +
-      '<div class="chip-note">Every employer named here has a full page in the advising wiki - ask your advisor for the interview-prep guide.</div>';
+      '';
 
     var tasks = t.project.tasks.map(function (task, i) {
       var done = taskDone(t.id, i);
@@ -1425,7 +1417,7 @@ window.EXPLORER_TRACKS.push({
     }).join('');
 
     var completion = pr.done === pr.total
-      ? '<div class="completion-banner"><b>Project complete.</b> You just did a compressed week of real ' + esc(t.name.toLowerCase()) + ' work. If any task felt energizing rather than draining, take that seriously - the next-steps list below is where to go from here, and your advisor can connect you with alumni doing exactly this.</div>'
+      ? '<div class="completion-banner"><b>Project complete.</b> You just did a compressed week of real ' + esc(t.name.toLowerCase()) + ' work. If any task felt energizing rather than draining, take that seriously - the next-steps list below is where to go from here.</div>'
       : '';
 
     var next =
@@ -1434,8 +1426,7 @@ window.EXPLORER_TRACKS.push({
         '<div class="panel"><h4>Student orgs &amp; campus experiences</h4><ul>' + t.next.campus.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
         '<div class="panel"><h4>Internships &amp; programs to target</h4><ul>' + t.next.experiences.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
         '<div class="panel"><h4>Do this month, from your dorm</h4><ul>' + t.next.now.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
-      '</div>' +
-      '<p class="next-note">' + t.next.advisorNote + '</p>';
+      '</div>';
 
     app.innerHTML =
       '<div style="--track:' + t.color + ';--track-wash:' + t.wash + '">' +
@@ -1480,8 +1471,7 @@ window.EXPLORER_TRACKS.push({
       '</section>' +
 
       '<section class="zone" id="next">' +
-        '<h2 class="zone-title">Liked it? Here\'s the on-ramp</h2>' +
-        '<p class="zone-sub">Everything below is real and specific to Vanderbilt - pulled from the career advising wiki.</p>' +
+        '<h2 class="zone-title">Some suggestions for next steps</h2>' +
         next +
       '</section>' +
       '</div>';
